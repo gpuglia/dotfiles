@@ -118,6 +118,7 @@ let g:ctrlp_map = "<Leader>t"
 let g:ctrlp_user_command = "ag %s -l --nocolor -g ''"
 nnoremap <silent> ,b :CtrlPBuffer<cr> " CtrlP on buffers
 
+" Rails navigation
 map <Leader>ja :CtrlP app/assets<CR>
 map <Leader>jc :CtrlP app/controllers<CR>
 map <Leader>jm :CtrlP app/models/<CR>
@@ -127,6 +128,10 @@ map <Leader>jl :CtrlP lib<CR>
 map <Leader>jp :CtrlP public<CR>
 map <Leader>js :CtrlP spec<CR>
 map <Leader>jd :CtrlP db<CR>
+
+" Ember navigation
+map <Leader>jt :CtrlP app/templates<CR>
+map <Leader>jo :CtrlP app/components<CR>
 
 " Ctags
 map <Leader>ct :!ctags -R .<CR>
