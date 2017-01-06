@@ -1,6 +1,7 @@
 # via @Arkham
 task :default => [:backup_dir, :backup, :link]
 
+DOTFILES_DIR = "code/dotfiles"
 DOTFILES = %w(
   editrc
   gemrc
