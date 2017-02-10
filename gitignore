@@ -32,6 +32,7 @@ cscope.files
 cscope.out
 cscope.in.out
 cscope.po.out
+logfile
 
 # Vim       taken from: https://github.com/github/gitignore/blob/master/Global/vim.gitignore
 # ----------------------------------------------------------------------------------------------
