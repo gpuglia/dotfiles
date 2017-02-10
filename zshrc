@@ -10,13 +10,18 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# Load rbenv
 eval "$(rbenv init -)"
+
+# Load nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 # Prompt
 prompt pure
 
 # Customize to your needs...
-source ~/.bin/tmuxinator.zsh
+# source ~/.bin/tmuxinator.zsh
 
 # Base16 Shell
 BASE16_SHELL=$HOME/.config/base16-shell/
@@ -37,6 +42,8 @@ alias du='du -h -d 2'
 
 alias ll='ls -alGh'
 alias ls='ls -Gh'
+
+alias rm='rm -f'
 
 # show me files matching "ls grep"
 alias lsg='ll | grep'
@@ -94,23 +101,27 @@ alias gds='git diff --staged -w'
 alias gpl='git pull'
 alias gnb='git nb' # new branch aka checkout -b
 alias grb='git recent-branches'
+alias amend='g ci --amend --no-edit'
 
 # Ruby
 alias c='rails c'
+
+# Spring
+alias ss='spring stop'
 
 # TODOS
 # This uses NValt (NotationalVelocity alt fork) - http://brettterpstra.com/project/nvalt/
 # to find the note called 'todo'
 alias todo='open nvalt://find/todo'
 
-alias rdm='rake db:migrate'
-alias rdmr='rake db:migrate:redo'
-alias rdmt='rake db:migrate RAILS_ENV=test'
-alias rdrv='rake db:reload_views'
-alias rdrvt='rake db:reload_views RAILS_ENV=test'
+alias rdm='bin/rake db:migrate'
+alias rdmr='bin/rake db:migrate:redo'
+alias rdmt='bin/rake db:migrate RAILS_ENV=test'
+alias rdrv='bin/rake db:reload_views'
+alias rdrvt='bin/rake db:reload_views RAILS_ENV=test'
 
 # Rspec
-alias rs='rspec spec'
+alias rs='bin/rspec spec'
 
 # Tmux
 alias tat='tmux attach-session -t'
@@ -118,7 +129,13 @@ alias tat='tmux attach-session -t'
 # Homebrew
 alias brewu='brew update  && brew upgrade --all && brew cleanup && brew prune && brew doctor'
 
-# vim mode
+# Postgres
+alias pg_start='pg_ctl -D /usr/local/var/postgres start -l logfile'
+
+# VIM mode
 set -o vi
 
 [ -f /opt/boxen/env.sh ] && source /opt/boxen/env.sh
+
+export NVM_DIR="/Users/gus/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

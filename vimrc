@@ -87,9 +87,9 @@ set smartcase
 " Panes
 set splitright
 set splitbelow
-set winheight=5
-set winminheight=5
-set winheight=999
+" set winheight=5
+" set winminheight=5
+" set winheight=999
 
 " Mappings
 let mapleader=','
@@ -204,6 +204,10 @@ nmap <leader>cl :let @*=expand("%:p")<CR>
 
 " Misc
 nmap 0 ^
+" inoremap <C-S> :w<CR>
+"
+" File execution
+nmap <leader>x :w<CR>:make<CR>
 
 if filereadable(expand("~/.vimrc_background"))
   source ~/.vimrc_background
