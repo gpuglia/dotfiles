@@ -19,16 +19,21 @@
  ;; If there is more than one, they won't work right.
  )
 
-;; Helm
 (use-package helm
   :ensure t
   :config
   (helm-mode 1))
 
-;; Evil mode
 (use-package evil
   :ensure t
   :config
   (evil-mode t))
 
-(use-package projectile)
+(use-package projectile
+  :ensure t
+  :defer 1
+  :config
+  (projectile-global-mode))
+
+(use-package helm-projectile
+  :ensure t)
