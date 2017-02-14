@@ -20,11 +20,15 @@
  )
 
 ;; Helm
-(require 'helm-config)
-(helm-mode 1)
+(use-package helm
+  :ensure t
+  :config
+  (helm-mode 1))
 
 ;; Evil mode
-(require 'evil)
-(evil-mode t)
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode t))
 
-(require 'projectile)
+(use-package projectile)
