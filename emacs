@@ -1,8 +1,8 @@
 (require 'package)
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
 (setq package-enable-at-startup nil)
 (package-initialize)
@@ -22,13 +22,16 @@
  ;; If there is more than one, they won't work right.
  )
 
-(load-theme 'base16-tomorrow-night t)
+(load-theme 'base16-eighties t)
+(set-frame-font "Monaco-15")
 
 (load-file "~/.emacs.d/sensible-defaults.el")
 (sensible-defaults/use-all-settings)
 (sensible-defaults/use-all-keybindings)
 
-(use-package helm
+(setq ring-bell-function 'ignore)
+(setq scroll-conservatively 100)
+
   :ensure t
   :config
   (helm-mode 1))
