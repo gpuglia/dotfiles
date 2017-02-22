@@ -27,6 +27,15 @@
 (load-theme 'base16-eighties t)
 (set-frame-font "Monaco-15")
 
+;; Set $PATH for rbenv
+(setenv "PATH"
+ (concat (getenv "HOME") "/.rbenv/shims:"
+  (getenv "HOME") "/.rbenv/bin:" (getenv "PATH")))
+
+(setq exec-path
+ (cons (concat (getenv "HOME") "/.rbenv/shims")
+  (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))
+
 (load-file "~/.emacs.d/sensible-defaults.el")
 (sensible-defaults/use-all-settings)
 (sensible-defaults/use-all-keybindings)
