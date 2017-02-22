@@ -62,27 +62,37 @@
   :config
   (flx-ido-mode 1))
 
- (use-package helm
-   :ensure t
-   :config
-   (helm-mode 1))
+(use-package helm
+  :ensure t
+  :config
+  (defun my-helm-init ()
+    (define-key helm-map (kbd "<escape>") 'helm-keyboard-quit))
+  (helm-mode 1)
+  (add-hook 'after-init-hook 'my-helm-init))
 
 (use-package projectile
   :ensure t
   :defer 1
   :config
-  (projectile-global-mode))
+  (projectile-mode))
 
- (use-package helm-projectile
-   :ensure t)
+(use-package helm-projectile
+  :ensure t)
 
 (use-package rspec-mode
-   :ensure t)
+  :ensure t)
 
 (use-package evil
   :ensure t
   :config
-  (evil-mode 1)
+
+  (define-key evil-normal-state-map (kbd "s") nil)
+  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+  (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+  (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+  (define-key evil-normal-state-map (kbd "vv") 'split-window-horizontally)
+  (define-key evil-normal-state-map (kbd "ss") 'split-window-vertically)
 
   (use-package evil-leader
     :ensure t
@@ -92,4 +102,6 @@
     (evil-leader/set-key
      "t" 'helm-projectile
      "b" 'helm-mini
-     "x" 'helm-M-x)))
+     "x" 'helm-M-x))
+
+  (evil-mode 1))
