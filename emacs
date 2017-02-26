@@ -13,10 +13,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
+    ("2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
  '(package-selected-packages
    (quote
-    (rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
+    (helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -49,6 +49,12 @@
 
 (setq scroll-conservatively 100)
 
+;; Indentation and tabs
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+(setq python-indent 2)
+
+
 ;; ido
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -71,13 +77,23 @@
   :config
   (flx-ido-mode 1))
 
+
 (use-package helm
   :ensure t
   :config
   (defun my-helm-init ()
     (define-key helm-map (kbd "<escape>") 'helm-keyboard-quit))
   (helm-mode 1)
-  (add-hook 'after-init-hook 'my-helm-init))
+  (add-hook 'after-init-hook 'my-helm-init)
+
+  :init
+  (use-package helm-projectile
+    :ensure t)
+
+  (use-package helm-ag
+    :ensure t
+    :config
+    (setq helm-ag-base-command "/usr/local/bin/ag --nogroup --ignore-case")))
 
 (use-package projectile
   :ensure t
@@ -85,12 +101,22 @@
   :config
   (projectile-mode))
 
-(use-package helm-projectile
-  :ensure t)
+;; Javascript and Coffeescripts
+(setq js-indent-level 2)
 
-(use-package rspec-mode
-  :ensure t)
+(add-hook 'coffee-mode-hook
+          (lambda ()
+            (setq coffee-tab-width 2)))
 
+;; Split horizontally for temporary buffer
+(defun hrs/split-horizontally-for-temp-buffers ()
+  (when (one-window-p t)
+    (split-window-horizontally)))
+
+(add-hook 'temp-buffer-window-setup-hook
+          'hrs/split-horizontally-for-temp-buffers)
+
+;; Evil
 (use-package evil
   :ensure t
   :config
@@ -110,7 +136,9 @@
     (evil-leader/set-leader ",")
     (evil-leader/set-key
      "t" 'helm-projectile
+     "T" 'helm-projectile-switch-project
      "b" 'helm-mini
+     "gg" 'helm-ag
      "x" 'helm-M-x))
 
   (evil-mode 1))
