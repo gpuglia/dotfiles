@@ -16,7 +16,7 @@
     ("2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
  '(package-selected-packages
    (quote
-    (helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
+    (company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -47,6 +47,7 @@
 (when window-system
   (scroll-bar-mode -1))
 
+;; Scrolling
 (setq scroll-conservatively 100)
 
 ;; Indentation and tabs
@@ -54,8 +55,9 @@
 (setq-default tab-width 2)
 (setq python-indent 2)
 
+;; Look for executables in /usr/local/bin
+(setq exec-path (append exec-path '("/usr/local/bin")))
 
-;; ido
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
@@ -76,7 +78,6 @@
   :ensure t
   :config
   (flx-ido-mode 1))
-
 
 (use-package helm
   :ensure t
@@ -101,6 +102,41 @@
   :config
   (projectile-mode))
 
+(use-package rspec-mode
+  :ensure t)
+
+(use-package company
+  :ensure t
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package evil
+  :ensure t
+  :config
+
+  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+  (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+  (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+
+  (use-package evil-leader
+    :ensure t
+    :config
+    (global-evil-leader-mode)
+    (evil-leader/set-leader ",")
+    (evil-leader/set-key
+     "a" 'rspec-verify-all
+     "b" 'helm-mini
+     "l" 'rspec-rerun
+     "s" 'rspec-verify-single
+     "t" 'helm-projectile
+     "T" 'helm-projectile-switch-project
+     "vv" 'split-window-horizontally
+     "gg" 'helm-ag
+     "x" 'helm-M-x))
+
+  (evil-mode 1))
+
 ;; Javascript and Coffeescripts
 (setq js-indent-level 2)
 
@@ -115,30 +151,3 @@
 
 (add-hook 'temp-buffer-window-setup-hook
           'hrs/split-horizontally-for-temp-buffers)
-
-;; Evil
-(use-package evil
-  :ensure t
-  :config
-
-  (define-key evil-normal-state-map (kbd "s") nil)
-  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
-  (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
-  (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
-  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
-  (define-key evil-normal-state-map (kbd "vv") 'split-window-horizontally)
-  (define-key evil-normal-state-map (kbd "ss") 'split-window-vertically)
-
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader ",")
-    (evil-leader/set-key
-     "t" 'helm-projectile
-     "T" 'helm-projectile-switch-project
-     "b" 'helm-mini
-     "gg" 'helm-ag
-     "x" 'helm-M-x))
-
-  (evil-mode 1))
