@@ -62,6 +62,9 @@
 (setq ido-everywhere t)
 (ido-mode 1)
 
+(use-package diminish
+  :ensure t)
+
 (use-package ido-vertical-mode
   :ensure t
   :config
@@ -86,6 +89,7 @@
     (define-key helm-map (kbd "<escape>") 'helm-keyboard-quit))
   (helm-mode 1)
   (add-hook 'after-init-hook 'my-helm-init)
+  :diminish helm
 
   :init
   (use-package helm-projectile
@@ -99,6 +103,7 @@
 (use-package projectile
   :ensure t
   :defer 1
+  :diminish projectile
   :config
   (projectile-mode))
 
