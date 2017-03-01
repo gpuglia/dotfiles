@@ -16,7 +16,7 @@
     ("2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
  '(package-selected-packages
    (quote
-    (company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
+    (helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -35,6 +35,9 @@
 (setq exec-path
  (cons (concat (getenv "HOME") "/.rbenv/shims")
   (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))
+
+;; Look for executables in /usr/local/bin
+(setq exec-path (append exec-path '("/usr/local/bin")))
 
 (load-file "~/.emacs.d/sensible-defaults.el")
 (sensible-defaults/use-all-settings)
@@ -55,8 +58,6 @@
 (setq-default tab-width 2)
 (setq python-indent 2)
 
-;; Look for executables in /usr/local/bin
-(setq exec-path (append exec-path '("/usr/local/bin")))
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -98,7 +99,12 @@
   (use-package helm-ag
     :ensure t
     :config
-    (setq helm-ag-base-command "/usr/local/bin/ag --nogroup --ignore-case")))
+    (setq helm-ag-base-command "/usr/local/bin/ag --nogroup --ignore-case"))
+
+  (use-package helm-gtags
+    :ensure t
+    :config
+    (helm-gtags-mode 1)))
 
 (use-package projectile
   :ensure t
@@ -108,12 +114,27 @@
   (projectile-mode))
 
 (use-package rspec-mode
-  :ensure t)
+  :ensure t
+  :config
+  (setq rspec-spec-command "bin/rspec")
+  (setq rspec-use-bundler-when-possible nil)
+  (setq rspec-use-spring-when-possible nil))
 
 (use-package company
   :ensure t
   :config
   (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package web-mode
+  :ensure t)
+
+(use-package haml-mode
+  :ensure t)
+
+(use-package ruby-mode
+  :ensure t
+  :config
+  (setq ruby-insert-encoding-magic-comment nil))
 
 (use-package evil
   :ensure t
@@ -132,6 +153,7 @@
     (evil-leader/set-key
      "a" 'rspec-verify-all
      "b" 'helm-mini
+     "f" 'helm-gtags-dwim
      "l" 'rspec-rerun
      "s" 'rspec-verify-single
      "t" 'helm-projectile
