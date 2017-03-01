@@ -109,11 +109,6 @@ alias c='rails c'
 # Spring
 alias ss='spring stop'
 
-# TODOS
-# This uses NValt (NotationalVelocity alt fork) - http://brettterpstra.com/project/nvalt/
-# to find the note called 'todo'
-alias todo='open nvalt://find/todo'
-
 alias rdm='bin/rake db:migrate'
 alias rdmr='bin/rake db:migrate:redo'
 alias rdmt='bin/rake db:migrate RAILS_ENV=test'
@@ -134,8 +129,3 @@ alias pg_start='pg_ctl -D /usr/local/var/postgres start -l logfile'
 
 # VIM mode
 set -o vi
-
-[ -f /opt/boxen/env.sh ] && source /opt/boxen/env.sh
-
-export NVM_DIR="/Users/gus/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
