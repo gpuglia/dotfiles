@@ -16,7 +16,7 @@
     ("2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
  '(package-selected-packages
    (quote
-    (helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
+    (yasnippet yassnippet helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -125,6 +125,13 @@
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+  (setq yas-snippet-dirs
+      '("~/.emacs.d/snippets")))
+
 (use-package web-mode
   :ensure t)
 
@@ -134,6 +141,7 @@
 (use-package ruby-mode
   :ensure t
   :config
+  (yas-global-mode 1)
   (setq ruby-insert-encoding-magic-comment nil))
 
 (use-package evil
