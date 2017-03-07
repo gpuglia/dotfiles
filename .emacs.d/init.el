@@ -12,11 +12,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   (quote
-    ("2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
+    (quote
+     ("0c3b1358ea01895e56d1c0193f72559449462e5952bded28c81a8e09b53f103f" "aea30125ef2e48831f46695418677b9d676c3babf43959c8e978c0ad672a7329" "16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" "25c242b3c808f38b0389879b9cba325fb1fa81a0a5e61ac7cae8da9a32e2811b" "cea3ec09c821b7eaf235882e6555c3ffa2fd23de92459751e18f26ad035d2142" "2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
+ '(evil-commentary-mode t)
  '(package-selected-packages
-   (quote
-    (exec-path-from-shell evil-commentary magit yaml-mode spacegray-theme evil-rails yasnippet yassnippet helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
+    (quote
+     (handlebars-mode exec-path-from-shell evil-commentary magit yaml-mode spacegray-theme evil-rails yasnippet yassnippet helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -27,17 +28,18 @@
 (set-frame-font "Monaco-15")
 (load-theme 'base16-eighties t)
 
-;; Set $PATH for rbenv
-;(setenv "PATH"
-; (concat (getenv "HOME") "/.rbenv/shims:"
-;  (getenv "HOME") "/.rbenv/bin:" (getenv "PATH")))
-
-;; (setq exec-path
-;;  (cons (concat (getenv "HOME") "/.rbenv/shims")
-;;   (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))
-
 ;; Look for executables in /usr/local/bin
-(setq exec-path (cons '("/usr/local/bin") exec-path))
+(setq exec-path (cons "/usr/local/bin" exec-path))
+
+;; Set $PATH for rbenv
+(setenv "PATH"
+(concat (getenv "HOME") "/.rbenv/shims:"
+ (getenv "HOME") "/.rbenv/bin:" (getenv "PATH")))
+
+(setq exec-path
+ (cons (concat (getenv "HOME") "/.rbenv/shims")
+  (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))
+
 
 (load-file "~/.emacs.d/sensible-defaults.el")
 (sensible-defaults/use-all-settings)
