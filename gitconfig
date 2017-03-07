@@ -111,7 +111,7 @@
 [core]
   autocrlf = false
   editor = vim
-  excludesfile = /opt/boxen/config/git/gitignore
+  excludesfile = /Users/gus/.gitignore
 [advice]
   statusHints = false
 [diff]
@@ -130,7 +130,7 @@
 	email = gustavo.puglia@alphasights.com
 
 [credential]
-helper = /opt/boxen/bin/boxen-git-credential
+#helper = /opt/boxen/bin/boxen-git-credential
 
 [hub]
 protocol = https
