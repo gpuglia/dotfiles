@@ -11,13 +11,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-backends
+    (quote
+     (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
+                   (company-dabbrev-code company-gtags company-keywords)
+                   company-oddmuse company-dabbrev)))
  '(custom-safe-themes
     (quote
-     ("0c3b1358ea01895e56d1c0193f72559449462e5952bded28c81a8e09b53f103f" "aea30125ef2e48831f46695418677b9d676c3babf43959c8e978c0ad672a7329" "16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" "25c242b3c808f38b0389879b9cba325fb1fa81a0a5e61ac7cae8da9a32e2811b" "cea3ec09c821b7eaf235882e6555c3ffa2fd23de92459751e18f26ad035d2142" "2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
+     ("d8f76414f8f2dcb045a37eb155bfaa2e1d17b6573ed43fb1d18b936febc7bbc2" "3f67aee8f8d8eedad7f547a346803be4cc47c420602e19d88bdcccc66dba033b" "db2ecce0600e3a5453532a89fc19b139664b4a3e7cbefce3aaf42b6d9b1d6214" "0c3b1358ea01895e56d1c0193f72559449462e5952bded28c81a8e09b53f103f" "aea30125ef2e48831f46695418677b9d676c3babf43959c8e978c0ad672a7329" "16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" "25c242b3c808f38b0389879b9cba325fb1fa81a0a5e61ac7cae8da9a32e2811b" "cea3ec09c821b7eaf235882e6555c3ffa2fd23de92459751e18f26ad035d2142" "2997ecd20f07b99259bddba648555335ffb7a7d908d8d3e6660ecbec415f6b95" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "3380a2766cf0590d50d6366c5a91e976bdc3c413df963a0ab9952314b4577299" "9be1d34d961a40d94ef94d0d08a364c3d27201f3c98c9d38e36f10588469ea57" default)))
  '(evil-commentary-mode t)
  '(package-selected-packages
     (quote
-     (handlebars-mode exec-path-from-shell evil-commentary magit yaml-mode spacegray-theme evil-rails yasnippet yassnippet helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
+     (evil-matchit ruby-refactor ruby-end coffee-mode arjen-grey-theme multi-term handlebars-mode exec-path-from-shell evil-commentary magit yaml-mode spacegray-theme evil-rails yasnippet yassnippet helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -53,9 +58,11 @@
   (scroll-bar-mode -1))
 (setq linum-format "%2d ")
 (fringe-mode -1)
+(blink-cursor-mode 0)
 
 ;; Scrolling
 (setq scroll-conservatively 100)
+(setq compilation-scroll-output t)
 
 ;; Indentation and tabs
 (setq-default indent-tabs-mode nil)
@@ -76,6 +83,7 @@
    (ruby . t)
    (python . t)))
 (setq org-confirm-babel-evaluate nil)
+(require 'ox-md)
 
 
 (use-package diminish
@@ -130,13 +138,6 @@
   (setq projectile-completion-system 'helm)
   (projectile-mode))
 
-(use-package rspec-mode
-  :ensure t
-  :config
-  (setq rspec-spec-command "bin/rspec")
-  (setq rspec-use-bundler-when-possible nil)
-  (setq rspec-use-spring-when-possible nil))
-
 (use-package company
   :ensure t
   :diminish company-mode
@@ -163,11 +164,40 @@
 (use-package yaml-mode
   :ensure t)
 
+ (use-package coffee-mode
+   :ensure t)
+
 (use-package ruby-mode
   :ensure t
   :config
+  (use-package inf-ruby
+    :ensure t
+    :config
+    (setq inf-ruby-breakpoint-pattern "\\(\\[1\\] .+ ~ »\\)\\|\\(\\[1\\] pry(\\)\\|\\((rdb:1)\\)\\|\\((byebug)\\)")
+    (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+    (add-hook 'compilation-filter-hook 'inf-ruby-auto-enter))
+
+  (use-package ruby-end
+   :ensure t)
+
+  (use-package ruby-refactor
+    :ensure t)
+
   (yas-global-mode 1)
-  (setq ruby-insert-encoding-magic-comment nil))
+  (setq ruby-insert-encoding-magic-comment nil)
+  (add-hook 'ruby-mode-hook 'ruby-refactor-mode-launch))
+
+(use-package rspec-mode
+  :ensure t
+  :config
+  (setq rspec-spec-command "bin/rspec")
+  (setq rspec-use-bundler-when-possible nil)
+  (setq rspec-use-spring-when-possible nil)
+  (add-hook 'rspec-compilation-mode-hook
+          (lambda ()
+            (make-local-variable 'compilation-scroll-output)
+            (setq compilation-scroll-output 'first-error)))
+  (add-hook 'after-init-hook 'inf-ruby-switch-setup))
 
 ;; Python
 (setq python-indent 4)
@@ -189,7 +219,7 @@
     (global-evil-leader-mode)
     (evil-leader/set-leader ",")
     (evil-leader/set-key
-     "a" 'rspec-verify-all
+     "a" 'rspec-verify-matching
      "b" 'helm-mini
      "f" 'helm-gtags-dwim
      "jm" 'projectile-rails-find-model
@@ -213,6 +243,12 @@
     :config
     (evil-commentary-mode))
 
+  (use-package evil-matchit
+    :ensure t
+    :diminish evil-matchit-mode
+    :config
+    (global-evil-matchit-mode 1))
+
   (evil-ex-define-cmd "A"  'projectile-toggle-between-implementation-and-test)
   (evil-ex-define-cmd "AV" '(lambda ()
                               (interactive)
@@ -224,6 +260,7 @@
                               (evil-window-split)
                               (windmove-down)
                               (projectile-toggle-between-implementation-and-test)))
+
   (evil-mode 1))
 
 ;; Javascript and Coffeescripts
