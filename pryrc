@@ -9,6 +9,10 @@ Pry.commands.alias_command "n", "next"
 Pry.commands.alias_command "f", "finish"
 Pry.commands.alias_command "l", "whereami"
 
+Pry.color = true
+
+Pry.config.correct_indent = false if ENV["INSIDE_EMACS"]
+
 # Custom methods
 # From https://gist.github.com/rondale-sc/1297510
 default_command_set = Pry::CommandSet.new do
