@@ -84,6 +84,7 @@
    (ruby . t)
    (python . t)))
 (setq org-confirm-babel-evaluate nil)
+
 (require 'ox-md)
 
 (setq org-directory "~/org")
@@ -159,9 +160,9 @@
     (define-key helm-map (kbd "<escape>") 'helm-keyboard-quit))
   (add-hook 'after-init-hook 'my-helm-init)
 
+  (helm-mode 1)
   :init
   (use-package helm-projectile
-  (helm-mode 1)
     :ensure t)
 
   (use-package helm-ag
@@ -183,6 +184,21 @@
   (setq projectile-completion-system 'helm)
   (projectile-mode))
 
+(use-package popwin
+  :ensure t
+  :config
+  (push '("^CAPTURE-.+\*.org$" :regexp t :position bottom) popwin:special-display-config)
+  (push '("*rspec-compilation*" :height 0.4 :noselect t) popwin:special-display-config)
+  (push '("*Warnings*") popwin:special-display-config)
+  (push '("^\*helm.+\*$" :regexp t :height 0.4) popwin:special-display-config)
+  (add-hook 'helm-after-initialize-hook (lambda ()
+                                          (popwin:display-buffer helm-buffer t)
+                                          (popwin-mode -1)))
+
+ ;;  Restore popwin-mode after a Helm session finishes.
+ (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
+  (popwin-mode 1))
+
 (use-package company
   :ensure t
   :diminish company-mode
@@ -191,6 +207,9 @@
 
 (use-package magit
   :ensure t)
+
+(use-package undo-tree
+  :diminish undo-tree-mode)
 
 (use-package yasnippet
   :ensure t
@@ -219,6 +238,11 @@
     :ensure t
     :config
     (setq inf-ruby-breakpoint-pattern "\\(\\[1\\] .+ ~ »\\)\\|\\(\\[1\\] pry(\\)\\|\\((rdb:1)\\)\\|\\((byebug)\\)")
+
+    (setq inf-ruby-prompt-format (concat "\\(\\[[1-9]+\\] .+ ~ »\\)\\|" inf-ruby-prompt-format))
+    (setq inf-ruby-first-prompt-pattern (format inf-ruby-prompt-format ">" ">"))
+    (setq inf-ruby-prompt-pattern (format inf-ruby-prompt-format "[?>]" "[\]>*\"'/`]"))
+
     (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
     (add-hook 'compilation-filter-hook 'inf-ruby-auto-enter))
 
@@ -288,6 +312,14 @@
     :config
     (evil-commentary-mode))
 
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode))
+
+  (use-package evil-indent-textobject
+    :ensure t)
+
   (use-package evil-matchit
     :ensure t
     :diminish evil-matchit-mode
@@ -322,11 +354,3 @@
 
 (add-hook 'temp-buffer-window-setup-hook
           'hrs/split-horizontally-for-temp-buffers)
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode))
-
-  (use-package evil-indent-textobject
-    :ensure t)
-
