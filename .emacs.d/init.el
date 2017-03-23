@@ -277,3 +277,11 @@
 
 (add-hook 'temp-buffer-window-setup-hook
           'hrs/split-horizontally-for-temp-buffers)
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode))
+
+  (use-package evil-indent-textobject
+    :ensure t)
+
