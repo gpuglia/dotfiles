@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name : it
+# group : rspec
+# --
+it '${1:description}' do
+  $0
+end
