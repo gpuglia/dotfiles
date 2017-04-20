@@ -145,6 +145,11 @@
 
 (global-set-key (kbd "M-n") 'org-capture-todo)
 
+;; Abbreviations
+(define-abbrev-table 'ruby-mode-abbrev-table
+  '((";pry" "binding.pry")))
+(setq-default abbrev-mode t)
+
 ;; Packages
 (use-package diminish
   :ensure t)
