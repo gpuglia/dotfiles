@@ -269,7 +269,13 @@
   :ensure t)
 
 (use-package coffee-mode
-:ensure t)
+  :ensure t)
+
+(use-package sass-mode
+  :ensure t)
+
+(use-package elixir-mode
+  :ensure t)
 
 (use-package markdown-mode
   :ensure t
