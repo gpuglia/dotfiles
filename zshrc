@@ -31,6 +31,7 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 alias psa="ps aux"
 alias psg="ps aux | grep "
 alias psr='ps aux | grep ruby'
+alias k9='kill -9'
 
 # Moving around
 alias cdb='cd -'
@@ -109,7 +110,7 @@ alias c='rails c'
 # Spring
 alias ss='spring stop'
 
-alias rdm='bin/rake db:migrate'
+alias rdm='bin/rake db:migrate && bin/rake db:test:prepare'
 alias rdmr='bin/rake db:migrate:redo'
 alias rdmt='bin/rake db:migrate RAILS_ENV=test'
 alias rdrv='bin/rake db:reload_views'
