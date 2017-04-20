@@ -32,9 +32,62 @@ default_command_set = Pry::CommandSet.new do
 
   command 'conx', 'Connect to analysis db' do
     if ENV['ANALYSIS_URL']
-      puts ActiveRecord::Base.establish_connection(ENV['ANALYSIS_URL'])
+      output.puts ActiveRecord::Base.establish_connection(ENV['ANALYSIS_URL'])
     end
+  end
+
+end
+
+pistachio_command_set = Pry::CommandSet.new do
+  command 'ship=', 'Set local variable adv to advisorship of passed-in id' do |id|
+    output.puts target.local_variable_set(:ship, Advisorship.find(id))
+  end
+
+  command 'adv=', 'Set local variable adv to advisorship of passed-in id' do |id|
+    output.puts target.local_variable_set(:adv, Advisor.find(id))
+  end
+
+  command 'inv=', 'Set local variable inv to advisorship of passed-in id' do |id|
+    output.puts target.local_variable_set(:inv, Invoice.find(id))
+  end
+
+  command 'pro=', 'Set local variable inv to advisorship of passed-in id' do |id|
+    output.puts target.local_variable_set(:pro, Project.find(id))
   end
 end
 
 Pry.config.commands.import default_command_set
+
+# Pistachio config
+if defined?(Pistachio)
+  class ActiveRecord::Relation
+    def vals
+      pluck(:id, :group, :credits, :amount, :currency, :owner_id, :at)
+    end
+  end
+
+  class Array
+    def vals
+      sort_by { |t| [t.at, t.id] }.map do |t|
+        {
+          id: t.id,
+          group: t.group_name,
+          credits: t.credits,
+          total: Cash.new(t.amount, t.currency),
+          owner: t.owner.name,
+          at: t.at
+        }
+      end
+    end
+
+    def to_human
+      map(&:to_human)
+    end
+  end
+
+  class Advisorship
+    alias_method :comps, :interaction_completions
+  end
+
+  Pry.config.commands.import pistachio_command_set
+end
