@@ -25,7 +25,7 @@
  '(evil-commentary-mode t)
  '(package-selected-packages
     (quote
-     (restclient diminish base16-theme flycheck nlinum evil-indent-textobject evil-surround popwin evil-matchit ruby-refactor ruby-end coffee-mode arjen-grey-theme multi-term handlebars-mode exec-path-from-shell evil-commentary magit yaml-mode spacegray-theme evil-rails yasnippet yassnippet helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil)))
+     (markdown-mode elixir-mode restclient diminish base16-theme flycheck nlinum evil-indent-textobject evil-surround popwin evil-matchit ruby-refactor ruby-end coffee-mode arjen-grey-theme multi-term handlebars-mode exec-path-from-shell evil-commentary magit yaml-mode spacegray-theme evil-rails yasnippet yassnippet helm-gtags haml-mode web-mode company company-mode helm-ag color-theme-sanityinc-tomorrow rspec-mode evil-leader flx-ido smex ido-vertical-mode helm-projectile helm evil)))
  '(popwin-mode t)
  '(safe-local-variable-values (quote ((projectile-project-name . "org")))))
 (custom-set-faces
@@ -33,8 +33,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- ;; '(default ((t (:inherit nil :stipple nil :background "#2b303b" :foreground "#c0c5ce" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 160 :width condensed :foundry "nil" :family "Fira Mono"))))
-)
+ )
 
 (set-frame-font "Monaco-15")
 (load-theme 'base16-ocean t)
@@ -57,6 +56,7 @@
 (sensible-defaults/use-all-keybindings)
 
 ;; Appearance
+(setq ns-use-native-fullscreen nil)
 (setq ring-bell-function 'ignore)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
@@ -96,7 +96,6 @@
 (setq org-confirm-babel-evaluate nil)
 (setq org-log-done 'time)
 (setq org-directory "~/org")
-(setq org-agenda-files (list org-index-file))
 (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
 (define-key org-mode-map (kbd "C-c C-x C-s") 'hrs/mark-done-and-archive)
@@ -110,6 +109,7 @@
 
 (setq org-inbox-file "~/org/inbox.org")
 (setq org-index-file (org-file-path "index.org"))
+(setq org-agenda-files (list org-index-file))
 (setq org-archive-location
       (concat (org-file-path "archive.org") "::* From %s"))
 
@@ -169,7 +169,20 @@
 (use-package flycheck
   :ensure t
   :diminish flycheck-mode
-  :init (global-flycheck-mode))
+  :init (global-flycheck-mode)
+  :config
+  (flycheck-define-checker proselint
+    "A linter for prose."
+    :command ("proselint" source-inplace)
+    :error-patterns
+    ((warning line-start (file-name) ":" line ":" column ": "
+              (id (one-or-more (not (any " "))))
+              (message (one-or-more not-newline)
+                       (zero-or-more "\n" (any " ") (one-or-more not-newline)))
+              line-end))
+    :modes (text-mode markdown-mode gfm-mode org-mode))
+
+  (add-to-list 'flycheck-checkers 'proselint))
 
 (use-package helm
   :ensure t
