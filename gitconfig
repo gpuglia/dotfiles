@@ -25,6 +25,7 @@
 
   # branch
   b = branch -v                     # branch (verbose)
+  cleanbr = "!git remote prune origin && git co master && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d && git co -"
 
   # commit
   c = commit -m                     # commit with message

@@ -6,7 +6,9 @@ call vundle#begin('~/.vim/bundle')
 Plugin 'bling/vim-airline'
 Plugin 'chriskempson/base16-vim'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'easymotion/vim-easymotion'
 Plugin 'ecomba/vim-ruby-refactoring'
+Plugin 'jgdavey/tslime.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'mustache/vim-mustache-handlebars'
@@ -22,6 +24,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rails'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'vim-scripts/octave.vim'
 Plugin 'tpope/vim-surround'
 " Plugin 'YankRing.vim'
 
@@ -42,8 +45,7 @@ set laststatus=2  " Always display the status line
 set autowrite
 set autoread
 set clipboard=unnamed
-set noerrorbells
-set novisualbell
+set noerrorbells visualbell t_vb=
 
 " Appearance
 let base16colorspace=256
@@ -112,7 +114,7 @@ nnoremap <silent> <Leader>qc :ccl<CR>
 
 " Ag
 let g:ag_working_path_mode="r"
-nnoremap <Leader>gg :Ag
+nnoremap <Leader>gg :Ag '
 nnoremap <S-k> :Ag <C-R><C-W><CR>
 
 " Ctrl-p
@@ -202,7 +204,14 @@ endfunction
 nmap <leader>cf :let @*=expand("%")<CR>
 nmap <leader>cl :let @*=expand("%:p")<CR>
 
+" Tslime
+let g:tslime_always_current_window = 1
+vmap <C-c><C-c> <Plug>SendSelectionToTmux
+nmap <C-c><C-c> <Plug>NormalModeSendToTmux
+nmap <C-c>r <Plug>SetTmuxVars
+
 " Misc
+" Move cursor to first character
 nmap 0 ^
 " inoremap <C-S> :w<CR>
 "
