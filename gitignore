@@ -47,3 +47,7 @@ Session.vim
 # SASS
 # ----------------------------------------------------------------------------------------------
 .sass-cache
+
+# Scratch file
+scratch.rb
+scratch.md
