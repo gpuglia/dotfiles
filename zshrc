@@ -49,8 +49,11 @@ alias rm='rm -f'
 # show me files matching "ls grep"
 alias lsg='ll | grep'
 
-# Alias Editing
+# Vim
+alias vi='mvim -v'
+alias vim='mvim -v'
 
+# Alias Editing
 alias ze='vim ~/.zshrc' #zshrc edit
 alias zr='source ~/.zshrc'  #zshrc reload
 
@@ -121,6 +124,7 @@ alias rs='bin/rspec spec'
 
 # Tmux
 alias tat='tmux attach-session -t'
+alias mux='tmuxinator'
 
 # Homebrew
 alias brewu='brew update  && brew upgrade --all && brew cleanup && brew prune && brew doctor'
@@ -130,3 +134,6 @@ alias pg_start='pg_ctl -D /usr/local/var/postgres start -l logfile'
 
 # VIM mode
 set -o vi
+
+# octave
+alias octave='octave --no-gui-libs'

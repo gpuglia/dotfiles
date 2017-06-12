@@ -9,14 +9,17 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'ecomba/vim-ruby-refactoring'
 Plugin 'jgdavey/tslime.vim'
+Plugin 'kana/vim-textobj-user'
 Plugin 'kien/ctrlp.vim'
 Plugin 'kchmck/vim-coffee-script'
+Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'rking/ag.vim'
 Plugin 'scrooloose/nerdtree'
 " Plugin 'scrooloose/syntastic'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'thoughtbot/vim-rspec'
+Plugin 'tmhedberg/matchit'
 Plugin 'tpope/vim-bundler'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-endwise'
@@ -96,7 +99,7 @@ set splitbelow
 " Mappings
 let mapleader=','
 
-nnoremap <Leader><Leader> <c-^>
+nnoremap <Leader>. <c-^>
 
 " clear search buffer
 nnoremap <silent> // :nohlsearch<CR>
