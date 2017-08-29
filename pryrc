@@ -31,11 +31,11 @@ default_command_set = Pry::CommandSet.new do
   end
 
   command 'conx', 'Connect to analysis db' do
+    output.puts 'connecting'
     if ENV['ANALYSIS_URL']
       output.puts ActiveRecord::Base.establish_connection(ENV['ANALYSIS_URL'])
     end
   end
-
 end
 
 pistachio_command_set = Pry::CommandSet.new do
@@ -54,12 +54,53 @@ pistachio_command_set = Pry::CommandSet.new do
   command 'pro=', 'Set local variable inv to advisorship of passed-in id' do |id|
     output.puts target.local_variable_set(:pro, Project.find(id))
   end
+
+  command 'morphin time', 'Allow mutation of transactions' do
+    output.puts ActiveRecord::Base.connection.execute('DROP TRIGGER prevent_transaction_commit_for_immutable_attributes ON transactions')
+  end
 end
 
 Pry.config.commands.import default_command_set
 
+class Array
+  def self.toy
+    [1, 2, 3, 4, 5]
+  end
+end
+
+class Hash
+  def self.toy
+    {a: 1, b: 2, c: 3, d: 4, e: 5}
+  end
+end
+
 # Pistachio config
 if defined?(Pistachio)
+  CURRENT_YEAR = 2017
+  def month
+    @_month = Month.current
+  end
+
+  def rmonth
+    @_rmonth = month.beginning..month.ending
+  end
+
+  def ryear
+    @_rmonth = january.beginning..Time.current
+  end
+
+  def january
+    @_july = Month.parse("January #{CURRENT_YEAR} ")
+  end
+
+  def july
+    @_july = Month.parse("July #{CURRENT_YEAR} ")
+  end
+
+  def august
+    @_august = Month.parse("August #{CURRENT_YEAR}")
+  end
+
   class ActiveRecord::Relation
     def vals
       pluck(:id, :group, :credits, :amount, :currency, :owner_id, :at)
