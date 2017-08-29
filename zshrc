@@ -132,8 +132,15 @@ alias brewu='brew update  && brew upgrade --all && brew cleanup && brew prune &&
 # Postgres
 alias pg_start='pg_ctl -D /usr/local/var/postgres start -l logfile'
 
+# Pistachio
+alias pist='open https://github.com/alphasights/pistachio'
+
 # VIM mode
 set -o vi
 
 # octave
 alias octave='octave --no-gui-libs'
+
+# cake
+export CAKE_LOCAL_DB="alpha_dev"
+export CAKE_REMOTE_APP="cake-data"
