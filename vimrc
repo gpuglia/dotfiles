@@ -1,18 +1,22 @@
 set nocompatible
-filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle')
 Plugin 'bling/vim-airline'
+Plugin 'chrisbra/csv.vim'
 Plugin 'chriskempson/base16-vim'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'ecomba/vim-ruby-refactoring'
+Plugin 'elixir-lang/vim-elixir'
 Plugin 'jgdavey/tslime.vim'
+Plugin 'junegunn/goyo.vim'
+Plugin 'junegunn/limelight.vim'
 Plugin 'kana/vim-textobj-user'
 Plugin 'kien/ctrlp.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'nelstrom/vim-textobj-rubyblock'
+Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'rking/ag.vim'
 Plugin 'scrooloose/nerdtree'
@@ -29,9 +33,12 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'vim-scripts/octave.vim'
 Plugin 'tpope/vim-surround'
+Plugin 'w0rp/ale'
 " Plugin 'YankRing.vim'
 
 call vundle#end()
+filetype on
+filetype indent on
 filetype plugin indent on
 
 " General
@@ -96,6 +103,13 @@ set splitbelow
 " set winminheight=5
 " set winheight=999
 
+" Filetypes
+augroup filetype_markdown
+  au!
+  au FileType markdown setl tw=80
+  au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn,txt,ft} set filetype=markdown
+augroup END
+
 " Mappings
 let mapleader=','
 
@@ -117,7 +131,7 @@ nnoremap <silent> <Leader>qc :ccl<CR>
 
 " Ag
 let g:ag_working_path_mode="r"
-nnoremap <Leader>gg :Ag '
+nnoremap <Leader>gg :Ag ''<Left>
 nnoremap <S-k> :Ag <C-R><C-W><CR>
 
 " Ctrl-p
@@ -145,6 +159,11 @@ map <Leader>ct :!ctags -R .<CR>
 nnoremap <silent> ,f <C-]> " jump to tag
 nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr> " jump to tag in vetical split
 
+" Tabs
+nnoremap <silent> <Leader>Tc :tabc<CR>
+nnoremap <silent> <Leader>Te :tabe<CR>
+
+
 " Fugitive
 nnoremap <Leader>gs  :Gstatus<CR>
 nnoremap <Leader>gd  :Gdiff<CR>
@@ -152,6 +171,7 @@ nnoremap <Leader>gci :Gcommit<CR>
 nnoremap <Leader>gw  :Gwrite<CR>
 nnoremap <Leader>gr  :Gread<CR>
 nnoremap <Leader>gb  :Gblame<CR>
+nnoremap <Leader>gh  :Gbrowse<CR> " GitHub
 
 " Airline
 let g:airline_theme = 'base16'
@@ -220,6 +240,9 @@ nmap 0 ^
 "
 " File execution
 nmap <leader>x :w<CR>:make<CR>
+
+" Markdown
+let g:markdown_fenced_languages = ['ruby', 'html', 'python', 'bash=sh']
 
 if filereadable(expand("~/.vimrc_background"))
   source ~/.vimrc_background
