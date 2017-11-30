@@ -125,6 +125,7 @@ alias rs='bin/rspec spec'
 # Tmux
 alias tat='tmux attach-session -t'
 alias mux='tmuxinator'
+alias tns='tmux new-session -s'
 
 # Homebrew
 alias brewu='brew update  && brew upgrade --all && brew cleanup && brew prune && brew doctor'

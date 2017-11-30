@@ -11,13 +11,11 @@ Pry.commands.alias_command "l", "whereami"
 
 Pry.color = true
 
-Pry.config.correct_indent = false if ENV["INSIDE_EMACS"]
-
 # Custom methods
 # From https://gist.github.com/rondale-sc/1297510
 default_command_set = Pry::CommandSet.new do
-  command 'copy', 'Copy argument to description' do |str|
-    IO.popen('pbcopy', 'w') { |f| f << str.to_s }
+  command 'pb', 'Copy to clipboard' do |str|
+    IO.popen('pbcopy', 'w') { |f| f << target.eval(str) }
   end
 
   command 'caller_method' do |depth|
@@ -32,9 +30,14 @@ default_command_set = Pry::CommandSet.new do
 
   command 'conx', 'Connect to analysis db' do
     output.puts 'connecting'
-    if ENV['ANALYSIS_URL']
-      output.puts ActiveRecord::Base.establish_connection(ENV['ANALYSIS_URL'])
+    if ENV['ENGINEERING_URL']
+      output.puts ActiveRecord::Base.establish_connection(ENV['ENGINEERING_URL'])
     end
+  end
+
+  command 'local', 'Connect to local db' do
+    output.puts 'going local'
+    output.puts ActiveRecord::Base.establish_connection(:development)
   end
 end
 
@@ -99,6 +102,10 @@ if defined?(Pistachio)
 
   def august
     @_august = Month.parse("August #{CURRENT_YEAR}")
+  end
+
+  def october
+    @_august = Month.parse("October #{CURRENT_YEAR}")
   end
 
   class ActiveRecord::Relation
