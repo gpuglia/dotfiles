@@ -2,6 +2,7 @@ set nocompatible
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle')
+Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'bling/vim-airline'
 Plugin 'chrisbra/csv.vim'
 Plugin 'chriskempson/base16-vim'
@@ -13,27 +14,30 @@ Plugin 'jgdavey/tslime.vim'
 Plugin 'junegunn/goyo.vim'
 Plugin 'junegunn/limelight.vim'
 Plugin 'kana/vim-textobj-user'
+Plugin 'keith/investigate.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'Raimondi/delimitMate'
 Plugin 'rking/ag.vim'
 Plugin 'scrooloose/nerdtree'
-" Plugin 'scrooloose/syntastic'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'thoughtbot/vim-rspec'
 Plugin 'tmhedberg/matchit'
+Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-bundler'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'vim-scripts/octave.vim'
-Plugin 'tpope/vim-surround'
-Plugin 'w0rp/ale'
+" Plugin 'vim-scripts/octave.vim'
+" Plugin 'w0rp/ale'
 " Plugin 'YankRing.vim'
 
 call vundle#end()
@@ -163,7 +167,6 @@ nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("
 nnoremap <silent> <Leader>Tc :tabc<CR>
 nnoremap <silent> <Leader>Te :tabe<CR>
 
-
 " Fugitive
 nnoremap <Leader>gs  :Gstatus<CR>
 nnoremap <Leader>gd  :Gdiff<CR>
@@ -247,3 +250,15 @@ let g:markdown_fenced_languages = ['ruby', 'html', 'python', 'bash=sh']
 if filereadable(expand("~/.vimrc_background"))
   source ~/.vimrc_background
 endif
+
+" Investigate
+let g:investigate_use_dash=1
+
+" Set paste
+nmap <leader>sp :set paste<CR>
+
+" EasyMotion
+nmap s <Plug>(easymotion-overwin-f)
+let g:EasyMotion_smartcase = 1
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
