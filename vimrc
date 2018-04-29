@@ -203,8 +203,13 @@ iabbr pry binding.pry
 
 " vim-rspec
 nnoremap <leader>s :wa<CR>\|:call RunNearestSpec()<CR>
-nnoremap <leader>a :w<CR>\|:call RunCurrentSpecFile()<CR>
+nnoremap <leader>ra :w<CR>\|:call RunCurrentSpecFile()<CR>
 nnoremap <leader>l :w<CR>\|:call RunLastSpec()<CR>
+
+" rails specs
+nnoremap <leader>a :A<CR>
+nnoremap <leader>av :AV<CR>
+nnoremap <leader>as :AS<CR>
 
 " tab completion
 function! InsertTabWrapper()
