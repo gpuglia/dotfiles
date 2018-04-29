@@ -2,6 +2,7 @@ set nocompatible
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle')
+Plugin 'airblade/vim-gitgutter'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'bling/vim-airline'
 Plugin 'chrisbra/csv.vim'
@@ -19,6 +20,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'morhetz/gruvbox.git'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'Raimondi/delimitMate'
 Plugin 'rking/ag.vim'
@@ -33,9 +35,11 @@ Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-rhubarb'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'Vimjas/vim-python-pep8-indent'
 " Plugin 'vim-scripts/octave.vim'
 " Plugin 'w0rp/ale'
 " Plugin 'YankRing.vim'
@@ -62,8 +66,10 @@ set clipboard=unnamed
 set noerrorbells visualbell t_vb=
 
 " Appearance
-let base16colorspace=256
-set background=dark
+" let base16colorspace=256
+" set background=dark
+colorscheme gruvbox
+set t_ut=
 set number
 set ruler
 set nocursorline
@@ -77,6 +83,10 @@ set ttyfast
 set lazyredraw
 set synmaxcol=128
 hi! link Search DiffAdd " better search highlighting
+
+" if filereadable(expand("~/.vimrc_background"))
+"   source ~/.vimrc_background
+" endif
 
 " Mouse
 set mousehide
@@ -112,6 +122,11 @@ augroup filetype_markdown
   au!
   au FileType markdown setl tw=80
   au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn,txt,ft} set filetype=markdown
+augroup END
+
+augroup filetype_python
+  au!
+  au FileType python setl sts=4 ts=4 sw=4
 augroup END
 
 " Mappings
@@ -177,8 +192,8 @@ nnoremap <Leader>gb  :Gblame<CR>
 nnoremap <Leader>gh  :Gbrowse<CR> " GitHub
 
 " Airline
-let g:airline_theme = 'base16'
-let g:airline_powerline_fonts = 1
+" let g:airline_theme = 'base16'
+" let g:airline_powerline_fonts = 1
 
 " NERDTree
 nnoremap <Leader>nt :NERDTreeToggle<CR>
