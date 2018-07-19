@@ -66,8 +66,8 @@ set clipboard=unnamed
 set noerrorbells visualbell t_vb=
 
 " Appearance
-" let base16colorspace=256
-" set background=dark
+let base16colorspace=256
+set background=dark
 colorscheme gruvbox
 set t_ut=
 set number
@@ -267,9 +267,9 @@ nmap <leader>x :w<CR>:make<CR>
 " Markdown
 let g:markdown_fenced_languages = ['ruby', 'html', 'python', 'bash=sh']
 
-if filereadable(expand("~/.vimrc_background"))
-  source ~/.vimrc_background
-endif
+" if filereadable(expand("~/.vimrc_background"))
+"   source ~/.vimrc_background
+" endif
 
 " Investigate
 let g:investigate_use_dash=1
