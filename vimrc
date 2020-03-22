@@ -13,6 +13,7 @@ Plug 'jgdavey/tslime.vim'
 Plug 'janko-m/vim-test'
 Plug 'junegunn/fzf', { 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'keith/investigate.vim'
 Plug 'mileszs/ack.vim'
