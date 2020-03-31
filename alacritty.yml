@@ -27,7 +27,7 @@ window:
   # Blank space added around the window in pixels. This padding is not scaled by
   # DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 0
+    x: 5
     y: 0
 
   # Spread additional padding evenly around the terminal content.
@@ -78,31 +78,20 @@ font:
   # The normal (roman) font face to use.
   # Style can be specified to pick a specific face.
   normal:
-    family: "Fira Mono Medium"
+    family: "Fira Mono"
+    style: "Regular"
     # family: "Fira Code"
-    # family: "Source Code Pro"
-    # style: Retina
 
-  # The bold font face
-  # bold:
-  #   family: Iosevka
-    # family: "Fira Code"
-    # family: "Source Code Pro"
-
-  # The italic font face
-  # italic:
-  #   family: Iosevka
-    # family: "Fira Code"
-    # family: "Source Code Pro"
-    # style: "Medium Italic"
-
+  bold:
+    family: "Fira Mono"
+    style: "Regular"
   # Point size of the font
-  size: 22.0
+  size: 18.0
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: -3
+    x: -1
     y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
@@ -126,7 +115,7 @@ font:
   #
   # This is a global setting and will require a log out or restart to take
   # effect.
-  # use_thin_strokes: true
+  use_thin_strokes: true
 
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: false
@@ -318,7 +307,7 @@ key_bindings:
   - { key: C,        mods: Command,       action: Copy                         }
   - { key: Q,        mods: Command,       action: Quit                         }
   - { key: N,        mods: Command,       action: SpawnNewInstance             }
-  - { key: Return,   mods: Command,       action: ToggleFullscreen             }
+  - { key: Return,   mods: Command,       action: ToggleSimpleFullscreen             }
 
   - { key: Home,                          chars: "\x1bOH",   mode: AppCursor   }
   - { key: Home,                          chars: "\x1b[H",   mode: ~AppCursor  }
@@ -372,13 +361,13 @@ key_bindings:
   - { key: Delete,                        chars: "\x1b[3~"                     }
 
     # shortcuts for tmux. the leader key is control-b (0x02)
-  - { key: W,        mods: Command,       chars: "\x02&"                       }  # close tab (kill)
-  - { key: T,        mods: Command,       chars: "\x02c"                       }  # new tab
-  - { key: RBracket, mods: Command|Shift, chars: "\x02n"                       }  # select next tab
-  - { key: LBracket, mods: Command|Shift, chars: "\x02p"                       }  # select previous tab
-  - { key: RBracket, mods: Command,       chars: "\x02o"                       }  # select next pane
-  - { key: LBracket, mods: Command,       chars: "\x02;"                       }  # select last (previously used) pane
-  - { key: F,        mods: Command,       chars: "\x02/"                       }  # search (upwards) (see tmux.conf)
+  - { key: W,        mods: Command,       chars: "\x01&"                       }  # close tab (kill)
+  - { key: T,        mods: Command,       chars: "\x01c"                       }  # new tab
+  - { key: RBracket, mods: Command|Shift, chars: "\x01n"                       }  # select next tab
+  - { key: LBracket, mods: Command|Shift, chars: "\x01p"                       }  # select previous tab
+  - { key: RBracket, mods: Command,       chars: "\x01o"                       }  # select next pane
+  - { key: LBracket, mods: Command,       chars: "\x01;"                       }  # select last (previously used) pane
+  - { key: F,        mods: Command,       chars: "\x01/"                       }  # search (upwards) (see tmux.conf)
 
 mouse:
   # Click settings
