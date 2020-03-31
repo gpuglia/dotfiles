@@ -50,11 +50,11 @@ alias rm='rm -f'
 alias lsg='ll | grep'
 
 # Vim
-alias vi='mvim -v'
-alias vim='mvim -v'
+alias vi='nvim'
+alias vim='nvim'
 
 # Alias Editing
-alias ze='vim ~/.zshrc' #zshrc edit
+alias ze='vi ~/.zshrc' #zshrc edit
 alias zr='source ~/.zshrc'  #zshrc reload
 
 # mimic vim functions
@@ -126,15 +126,19 @@ alias rs='bin/rspec spec'
 alias tat='tmux attach-session -t'
 alias mux='tmuxinator'
 alias tns='tmux new-session -s'
+alias tls='tmux list-sessions'
 
 # Homebrew
-alias brewu='brew update  && brew upgrade --all && brew cleanup && brew prune && brew doctor'
+alias brewu='brew update && brew upgrade --all && brew cleanup && brew prune && brew doctor'
 
 # Postgres
 alias pg_start='pg_ctl -D /usr/local/var/postgres start -l logfile'
 
 # Pistachio
 alias pist='open https://github.com/alphasights/pistachio'
+
+# Notes
+alias learn='vi ~/notes/learnings.txt'
 
 # VIM mode
 set -o vi
@@ -145,3 +149,8 @@ alias octave='octave --no-gui-libs'
 # cake
 export CAKE_LOCAL_DB="alpha_dev"
 export CAKE_REMOTE_APP="cake-data"
+export PATH="/usr/local/opt/libxml2/bin:$PATH"
+export PATH="/usr/local/opt/ncurses/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+# export PATH="/usr/local/opt/postgresql@10/bin:$PATH"
+export PATH="/usr/local/opt/libxml2/bin:$PATH"
