@@ -3,12 +3,14 @@ set nocompatible
 call plug#begin('~/.vim/bundle')
 Plug 'airblade/vim-gitgutter'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'benmills/vimux'
 Plug 'bling/vim-airline'
 Plug 'chrisbra/csv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'easymotion/vim-easymotion'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'elixir-lang/vim-elixir'
+Plug 'jalvesaq/Nvim-R'
 Plug 'jgdavey/tslime.vim'
 Plug 'janko-m/vim-test'
 Plug 'junegunn/fzf', { 'do': './install --bin' }
@@ -19,15 +21,17 @@ Plug 'keith/investigate.vim'
 Plug 'mileszs/ack.vim'
 Plug 'kien/ctrlp.vim'
 Plug 'kchmck/vim-coffee-script'
-Plug 'liuchengxu/space-vim-theme'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'nelstrom/vim-markdown-folding'
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'mxw/vim-jsx'
-Plug 'pangloss/vim-javascript'
+Plug 'mattn/emmet-vim'
+" Plug 'pangloss/vim-javascript'
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'Raimondi/delimitMate'
 Plug 'roman/golden-ratio'
 Plug 'scrooloose/nerdtree'
+" Plug 'stephenway/postcss.vim'
 Plug 'thoughtbot/vim-rspec'
 Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-abolish'
@@ -43,11 +47,13 @@ Plug 'udalov/kotlin-vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Vimjas/vim-python-pep8-indent'
-" Plug 'vim-scripts/octave.vim'
-" Plug 'jremmen/vim-ripgrep'
 Plug 'w0rp/ale'
 " Plug 'YankRing.vim'
 if has('nvim')
+  Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
   Plug 'Shougo/deoplete.nvim'
@@ -57,10 +63,8 @@ endif
 let g:deoplete#enable_at_startup = 1
 
 " Colors
-Plug 'tyrannicaltoucan/vim-deep-space'
 Plug 'cocopon/iceberg.vim'
 Plug 'morhetz/gruvbox'
-Plug 'w0ng/vim-hybrid'
 
 call plug#end()
 
@@ -109,7 +113,7 @@ set novisualbell
 set list listchars=tab:»·,trail:·,nbsp:·
 set ttyfast
 set lazyredraw
-set synmaxcol=128
+" set synmaxcol=128
 hi! link Search DiffAdd " better search highlighting
 set guifont=Fira\ Mono:h16
 
@@ -237,6 +241,8 @@ iabbr pry binding.pry
 nnoremap <leader>s :wa<CR>\|:TestNearest<CR>
 nnoremap <leader>ra :wa<CR>\|:TestFile<CR>
 nnoremap <leader>l :wa<CR>\|:TestLast<CR>
+let test#strategy = "vimux"
+let test#java#runner = 'gradletest'
 
 " rails specs
 nnoremap <leader>a :A<CR>
@@ -347,10 +353,30 @@ if executable('rg')
 endif
 
 " fzf
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
 nnoremap <silent> ,b :Buffers<cr>
 nnoremap <silent> ,t :GFiles<cr>
-nnoremap <Leader>gg :Rg<cr>
+nnoremap <Leader>gg :RG<CR>
 nnoremap <S-k> :Rg <C-R><C-W><CR>
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+
+autocmd BufReadPost *.kt setlocal filetype=kotlin
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ 'kotlin': ['kotlin-language-server'],
+    \ }
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 

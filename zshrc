@@ -154,3 +154,12 @@ export PATH="/usr/local/opt/ncurses/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 # export PATH="/usr/local/opt/postgresql@10/bin:$PATH"
 export PATH="/usr/local/opt/libxml2/bin:$PATH"
+# Kotlin LSP
+export PATH="$HOME/code/kotlin-language-server/server/build/install/server/bin/:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
+
+export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+export PATH="$HOME/.emacs.d/bin:$PATH"
