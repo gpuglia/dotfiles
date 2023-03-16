@@ -130,8 +130,8 @@
 	name = Gustavo Puglia
 	email = gustavo.puglia@alphasights.com
 
-[credential]
-#helper = /opt/boxen/bin/boxen-git-credential
 
 [hub]
 protocol = https
+[init]
+	templatedir = ~/.git_template
