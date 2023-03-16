@@ -15,17 +15,24 @@ eval "$(rbenv init -)"
 
 # Load nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+
+# Load cargo
+[ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
+
+
+# FFI
+export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
 
 # Prompt
 prompt pure
 
 # Customize to your needs...
 # source ~/.bin/tmuxinator.zsh
-
-# Base16 Shell
-# BASE16_SHELL=$HOME/.config/base16-shell/
-# [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 # PS
 alias psa="ps aux"
@@ -61,7 +68,7 @@ alias zr='source ~/.zshrc'  #zshrc reload
 alias :q='exit'
 
 # vimrc editing
-alias ve='vim ~/.vimrc'
+alias ve='vim ~/.config/nvim/init.vim'
 
 # Git Aliases
 alias g='git'
@@ -131,35 +138,5 @@ alias tls='tmux list-sessions'
 # Homebrew
 alias brewu='brew update && brew upgrade --all && brew cleanup && brew prune && brew doctor'
 
-# Postgres
-alias pg_start='pg_ctl -D /usr/local/var/postgres start -l logfile'
-
-# Pistachio
-alias pist='open https://github.com/alphasights/pistachio'
-
-# Notes
-alias learn='vi ~/notes/learnings.txt'
-
 # VIM mode
 set -o vi
-
-# octave
-alias octave='octave --no-gui-libs'
-
-# cake
-export CAKE_LOCAL_DB="alpha_dev"
-export CAKE_REMOTE_APP="cake-data"
-export PATH="/usr/local/opt/libxml2/bin:$PATH"
-export PATH="/usr/local/opt/ncurses/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-# export PATH="/usr/local/opt/postgresql@10/bin:$PATH"
-export PATH="/usr/local/opt/libxml2/bin:$PATH"
-# Kotlin LSP
-export PATH="$HOME/code/kotlin-language-server/server/build/install/server/bin/:$PATH"
-export PYENV_ROOT="$HOME/.pyenv"
-
-export PATH="$PYENV_ROOT/bin:$PATH"
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
-export PATH="$HOME/.emacs.d/bin:$PATH"

@@ -81,6 +81,13 @@ zstyle ':prezto:module:editor' key-bindings 'vi'
 # zstyle ':prezto:module:history-substring-search' globbing-flags ''
 
 #
+# macOS
+#
+
+# Set the keyword used by `mand` to open man pages in Dash.app
+zstyle ':prezto:module:osx:man' dash-keyword 'manpages'
+
+#
 # Pacman
 #
 
@@ -165,3 +172,12 @@ zstyle ':prezto:module:prompt' theme 'sorin'
 
 # Integrate with iTerm2.
 # zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+#
+#
+# Utility
+#
+
+# Enabled safe options. This aliases cp, ln, mv and rm so that they prompt
+# before deleting or overwriting files. Set to 'no' to disable this safer
+# behavior.
+zstyle ':prezto:module:utility' safe-ops 'yes'
