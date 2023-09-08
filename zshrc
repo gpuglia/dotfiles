@@ -10,9 +10,6 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Load rbenv
-eval "$(rbenv init -)"
-
 # Load nvm
 export NVM_DIR="$HOME/.nvm"
   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
@@ -22,11 +19,25 @@ export NVM_DIR="$HOME/.nvm"
 # Load cargo
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
+# asdf
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
 
 # FFI
 export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
+
+
+export EDITOR=nvim
+export GIT_EDITOR=nvim
 
 # Prompt
 prompt pure
@@ -69,6 +80,7 @@ alias :q='exit'
 
 # vimrc editing
 alias ve='vim ~/.config/nvim/init.vim'
+alias ie='vim ~/.ideavimrc'
 
 # Git Aliases
 alias g='git'
