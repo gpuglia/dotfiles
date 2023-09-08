@@ -51,3 +51,10 @@ Session.vim
 # Scratch file
 scratch.rb
 scratch.md
+
+# Logseq
+logseq/bak/
+logseq/.recycle
+
+# asdf
+.tool-versions
