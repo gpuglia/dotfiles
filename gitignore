@@ -24,6 +24,7 @@ tags
 !tags/
 .tags
 .tags1
+*.tags
 gtags.files
 GTAGS
 GRTAGS
@@ -58,3 +59,4 @@ logseq/.recycle
 
 # asdf
 .tool-versions
+**/.tool-versions

@@ -128,13 +128,15 @@ alias amend='g ci --amend --no-edit'
 
 # Ruby
 alias c='rails c'
+alias bi='BUNDLE_FORCE_RUBY_PLATFORM=true bundle install'
 
 # Spring
 alias ss='spring stop'
 
-alias rdm='bin/rake db:migrate && bin/rake db:test:prepare'
+alias rdm='bin/rake db:migrate && bin/rake db:migrate RAILS_ENV=test'
 alias rdmr='bin/rake db:migrate:redo'
 alias rdmt='bin/rake db:migrate RAILS_ENV=test'
+alias rdr='bin/rake db:rollback && bin/rake db:rollback RAILS_ENV=test'
 alias rdrv='bin/rake db:reload_views'
 alias rdrvt='bin/rake db:reload_views RAILS_ENV=test'
 
@@ -152,3 +154,15 @@ alias brewu='brew update && brew upgrade --all && brew cleanup && brew prune && 
 
 # VIM mode
 set -o vi
+
+export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
+
+
+# function python() {
+#   python3
+# }
+#
+# Source local config
+if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zshrc.local"
+fi
