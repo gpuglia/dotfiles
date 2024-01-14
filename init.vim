@@ -420,20 +420,6 @@ nnoremap <silent> ,b :Buffers<cr>
 nnoremap <silent> <C-p> :GFiles<cr>
 nnoremap <silent> ,m :Marks<cr>
 nnoremap <silent> ,cm :Commands<cr>
-" nnoremap <Leader>gg :RG<CR>
-" nnoremap <S-k> :Rg <C-R><C-W><CR>
-
-" autocmd BufReadPost *.kt setlocal filetype=kotlin
-" let g:LanguageClient_serverCommands = {
-"     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-"     \ 'python': ['/usr/local/bin/pyls'],
-"     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-"     \ 'kotlin': ['kotlin-language-server'],
-"     \ }
-" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-" set shell=/bin/bash\ --norc\ -i
 
 " Vimux
 map <Leader>vp :VimuxPromptCommand<CR>
@@ -448,7 +434,7 @@ map <Leader>z :VimuxZoomRunner<CR>
 " Treesitter
 lua << EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "vim", "ruby", "kotlin", "typescript", "python"},
+  ensure_installed = { "vim", "ruby", "kotlin", "typescript", "python", "go"},
   auto_install = true,
 
    highlight = {
