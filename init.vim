@@ -86,6 +86,7 @@ Plug 'lunacookies/vim-colors-xcode'
 Plug 'Abstract-IDE/Abstract-cs'
 Plug 'nyoom-engineering/oxocarbon.nvim'
 Plug 'folke/tokyonight.nvim'
+Plug 'metalelf0/jellybeans-nvim'
 
 call plug#end()
 
@@ -116,7 +117,7 @@ if has('nvim') || has('termguicolors')
   set termguicolors
 endif
 
-colorscheme oxocarbon
+colorscheme jellybeans-nvim
 
 " lua << EOF
 " local lush = require('lush')
