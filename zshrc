@@ -38,6 +38,7 @@ export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
 
 export EDITOR=nvim
 export GIT_EDITOR=nvim
+export BUNDLER_EDITOR=nvim
 
 # Prompt
 prompt pure
@@ -154,6 +155,12 @@ alias brewu='brew update && brew upgrade --all && brew cleanup && brew prune && 
 
 # VIM mode
 set -o vi
+
+# Docker Compose
+alias dc='docker compose'
+alias dcu='docker compose up'
+alias dcd='docker compose down'
+alias dcps='docker compose ps'
 
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 

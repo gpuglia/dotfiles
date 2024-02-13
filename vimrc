@@ -371,12 +371,12 @@ command! -bang -nargs=* Rg
   \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 autocmd BufReadPost *.kt setlocal filetype=kotlin
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-    \ 'kotlin': ['kotlin-language-server'],
-    \ }
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+"     \ 'python': ['/usr/local/bin/pyls'],
+"     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+"     \ 'kotlin': ['kotlin-language-server'],
+"     \ }
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 

@@ -9,7 +9,6 @@ Plug 'chrisbra/csv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ecomba/vim-ruby-refactoring'
 " Plug 'elixir-lang/vim-elixir'
-Plug 'hrsh7th/nvim-cmp'
 " Plug 'jalvesaq/Nvim-R'
 Plug 'jgdavey/tslime.vim'
 Plug 'janko-m/vim-test'
@@ -18,13 +17,12 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'keith/investigate.vim'
-Plug 'kchmck/vim-coffee-script'
+" Plug 'kchmck/vim-coffee-script'
 Plug 'mileszs/ack.vim'
-Plug 'mustache/vim-mustache-handlebars'
+" Plug 'mustache/vim-mustache-handlebars'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'nelstrom/vim-markdown-folding'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'onsails/lspkind.nvim'
 Plug 'Raimondi/delimitMate'
 Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'sheerun/vim-polyglot'
@@ -39,54 +37,59 @@ Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
-" Plug 'vim-ruby/vim-ruby'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Vimjas/vim-python-pep8-indent'
-" Plug 'w0rp/ale'
 Plug 'ggandor/leap.nvim'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'nvim-tree/nvim-web-devicons'
+
+" Language server management
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+
+" LSP support
+Plug 'neovim/nvim-lspconfig'
+Plug 'onsails/lspkind.nvim'
+
+" Autocompletion
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'L3MON4D3/LuaSnip'
+
+Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 
 " Tree navigation
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-tree/nvim-tree.lua'
 
 " JS/TS
-Plug 'pangloss/vim-javascript'
+" Plug 'pangloss/vim-javascript'
 " Plug 'maxmellon/vim-jsx-pretty'
-Plug 'HerringtonDarkholme/yats.vim'
+" Plug 'HerringtonDarkholme/yats.vim'
 
 " Plug 'YankRing.vim'
 if has('nvim')
+  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  " Plug 'etordera/deoplete-ruby'
   " Plug 'autozimu/LanguageClient-neovim', {
   "   \ 'branch': 'next',
   "   \ 'do': 'bash install.sh',
   "   \ }
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
-  Plug 'Shougo/deoplete.nvim'
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
-let g:deoplete#enable_at_startup = 1
 
 " Colors
 Plug 'rktjmp/lush.nvim'
-Plug 'morhetz/gruvbox'
-Plug 'lifepillar/vim-gruvbox8'
-Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'whatyouhide/vim-gotham'
-Plug 'ksevelyar/joker.vim'
-Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
 Plug 'doums/darcula'
-Plug 'lettertwo/laserwave.nvim'
-Plug 'jonathanfilip/vim-lucius'
-Plug 'lunacookies/vim-colors-xcode'
 Plug 'Abstract-IDE/Abstract-cs'
 Plug 'nyoom-engineering/oxocarbon.nvim'
-Plug 'folke/tokyonight.nvim'
 Plug 'metalelf0/jellybeans-nvim'
+Plug 'shaunsingh/seoul256.nvim'
+Plug 'folke/tokyonight.nvim'
 
 call plug#end()
 
@@ -117,7 +120,8 @@ if has('nvim') || has('termguicolors')
   set termguicolors
 endif
 
-colorscheme jellybeans-nvim
+" colorscheme jellybeans-nvim
+colorscheme tokyonight-night
 
 " lua << EOF
 " local lush = require('lush')
@@ -140,7 +144,7 @@ let g:airline_powerline_fonts = 1
 set t_ut=
 set number
 set ruler
-set nocursorline
+set cursorline
 set showcmd
 set scrolloff=5
 set hidden
@@ -227,11 +231,11 @@ nnoremap <silent> <Leader>qc :ccl<CR>
 " Telescope
 nnoremap <leader>t <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>b <cmd>Telescope buffers<cr>
+nnoremap <leader>fc <cmd>Telescope commands<cr>
 
-" Disable deoplete while in Telescope
-autocmd FileType TelescopePrompt call deoplete#custom#buffer_option('auto_complete', v:false)
+
 
 " Rails navigation
 map <Leader>ja :CtrlP app/assets<CR>
@@ -416,7 +420,6 @@ noremap <leader>ff :call fzf#vim#files('', { 'source': g:FzfFilesSource(),
       \   '--preview', g:fzf_preview_cmd
       \  ]})<CR>
 " nnoremap <silent> <leader>t :GFiles<cr>
-nnoremap <silent> ,b :Buffers<cr>
 nnoremap <silent> <C-p> :GFiles<cr>
 nnoremap <silent> ,m :Marks<cr>
 nnoremap <silent> ,cm :Commands<cr>
@@ -434,7 +437,7 @@ map <Leader>z :VimuxZoomRunner<CR>
 " Treesitter
 lua << EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "vim", "ruby", "kotlin", "typescript", "python", "go"},
+  ensure_installed = { "vim", "javascript", "ruby", "kotlin", "typescript", "python", "go", "elixir", "sql" },
   auto_install = true,
 
    highlight = {
@@ -481,30 +484,30 @@ autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " Language server
-lua << EOF
-local status, nvim_lsp = pcall(require, "lspconfig")
-if (not status) then return end
+" lua << EOF
+" local status, nvim_lsp = pcall(require, "lspconfig")
+" if (not status) then return end
 
-local protocol = require('vim.lsp.protocol')
+" local protocol = require('vim.lsp.protocol')
 
-local on_attach = function(client, bufnr)
-  -- format on save
-  if client.server_capabilities.documentFormattingProvider then
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = vim.api.nvim_create_augroup("Format", { clear = true }),
-      buffer = bufnr,
-      callback = function() vim.lsp.buf.formatting_seq_sync() end
-    })
-  end
-end
+" local on_attach = function(client, bufnr)
+"   -- format on save
+"   if client.server_capabilities.documentFormattingProvider then
+"     vim.api.nvim_create_autocmd("BufWritePre", {
+"       group = vim.api.nvim_create_augroup("Format", { clear = true }),
+"       buffer = bufnr,
+"       callback = function() vim.lsp.buf.formatting_seq_sync() end
+"     })
+"   end
+" end
 
--- Typescript
-nvim_lsp.tsserver.setup {
-  on_attach = on_attach,
-  filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
-  cmd = { "typescript-language-server", "--stdio" }
-}
-EOF
+" -- Typescript
+" nvim_lsp.tsserver.setup {
+"   on_attach = on_attach,
+"   filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+"   cmd = { "typescript-language-server", "--stdio" }
+" }
+" EOF
 
 " nvim-tree
 lua << EOF
@@ -523,3 +526,46 @@ require('nvim-treesitter.configs').setup {
     },
 }
 EOF
+
+" Save before make
+" autocmd BufWritePost <buffer> make
+
+" LSP
+lua <<EOF
+local lsp_zero = require('lsp-zero')
+
+lsp_zero.on_attach(function(client, bufnr)
+  -- see :help lsp-zero-keybindings
+  -- to learn the available actions
+  lsp_zero.default_keymaps({buffer = bufnr})
+end)
+
+-- see :help lsp-zero-guide:integrate-with-mason-nvim
+-- to learn how to use mason.nvim with lsp-zero
+require('mason').setup({})
+require('mason-lspconfig').setup({
+  handlers = {
+    lsp_zero.default_setup,
+  }
+})
+EOF
+
+" lspkind
+lua <<EOF
+local lspkind = require('lspkind')
+local cmp = require('cmp')
+cmp.setup {
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol', -- show only symbol annotations
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+      ellipsis_char = '...' -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+    })
+  }
+}
+EOF
+
+" Running files
+autocmd FileType elixir nnoremap <leader>x :w <enter> :!elixir %<cr>
+autocmd FileType ruby   nnoremap <leader>x :w <enter> :!ruby %<cr>
+autocmd FileType go     nnoremap <leader>x :w <enter> :!go run %<cr>
