@@ -91,6 +91,14 @@
   svnd = svn dcommit
   svnl = svn log --oneline --show-commit
 	ctags = !.git/hooks/ctags
+
+  peek = "!f() { \
+    target=\"${1:-master}\"; \
+    git stash -k -u >/dev/null 2>&1 && \
+    git checkout \"$target\" && \
+    git stash pop >/dev/null 2>&1; \
+  }; f"
+
 [format]
   pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset
 [mergetool]
