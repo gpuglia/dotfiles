@@ -35,6 +35,7 @@ cscope.out
 cscope.in.out
 cscope.po.out
 logfile
+kls_database.db
 
 # Vim       taken from: https://github.com/github/gitignore/blob/master/Global/vim.gitignore
 # ----------------------------------------------------------------------------------------------
@@ -50,8 +51,7 @@ Session.vim
 .sass-cache
 
 # Scratch file
-scratch.rb
-scratch.md
+scratch.*
 
 # Logseq
 logseq/bak/
