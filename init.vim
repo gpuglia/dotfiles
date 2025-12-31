@@ -84,12 +84,11 @@ endif
 " Colors
 Plug 'rktjmp/lush.nvim'
 Plug 'whatyouhide/vim-gotham'
-Plug 'doums/darcula'
-Plug 'Abstract-IDE/Abstract-cs'
-Plug 'nyoom-engineering/oxocarbon.nvim'
 Plug 'metalelf0/jellybeans-nvim'
-Plug 'shaunsingh/seoul256.nvim'
 Plug 'folke/tokyonight.nvim'
+Plug 'rose-pine/neovim'
+Plug 'catppuccin/nvim'
+Plug 'rebelot/kanagawa.nvim'
 
 call plug#end()
 
@@ -112,16 +111,13 @@ set noerrorbells visualbell t_vb=
 
 " Colors
 " set background=light
-let g:gruvbox_contrast_dark="hard"
-let g:gruvbox_contrast_light="medium"
-let g:challenger_deep_termcolors=16
-
 if has('nvim') || has('termguicolors')
   set termguicolors
 endif
 
 " colorscheme jellybeans-nvim
-colorscheme tokyonight-night
+colorscheme jellybeans-nvim
+" colorscheme rose-pine
 
 " lua << EOF
 " local lush = require('lush')
@@ -437,7 +433,7 @@ map <Leader>z :VimuxZoomRunner<CR>
 " Treesitter
 lua << EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "vim", "javascript", "ruby", "kotlin", "typescript", "python", "go", "elixir", "sql" },
+  ensure_installed = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile" },
   auto_install = true,
 
    highlight = {
