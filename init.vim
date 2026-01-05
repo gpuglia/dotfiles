@@ -53,9 +53,15 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'onsails/lspkind.nvim'
 
 " Autocompletion
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'L3MON4D3/LuaSnip'
+let g:completion_engine = 'blink' " 'blink' or 'nvim-cmp'
+
+if g:completion_engine == 'nvim-cmp'
+  Plug 'hrsh7th/nvim-cmp'
+  Plug 'hrsh7th/cmp-nvim-lsp'
+  Plug 'L3MON4D3/LuaSnip'
+else
+  Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'cargo build --release' }
+endif
 
 Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 
@@ -285,18 +291,6 @@ let test#python#pytest#executable = 'docker-compose exec web py.test'
 nnoremap <leader>a :A<CR>
 nnoremap <leader>av :AV<CR>
 nnoremap <leader>as :AS<CR>
-
-" tab completion
-function! InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-n>"
-    endif
-endfunction
-inoremap <expr> <tab> InsertTabWrapper()
-inoremap <s-tab> <c-n>
 
 " rename current file
 function! RenameFile()
@@ -529,6 +523,7 @@ EOF
 " LSP
 lua <<EOF
 local lsp_zero = require('lsp-zero')
+local completion_engine = vim.g.completion_engine
 
 lsp_zero.on_attach(function(client, bufnr)
   -- see :help lsp-zero-keybindings
@@ -541,24 +536,100 @@ end)
 require('mason').setup({})
 require('mason-lspconfig').setup({
   handlers = {
-    lsp_zero.default_setup,
+    function(server_name)
+      local opts = {}
+      if completion_engine == 'blink' then
+        opts.capabilities = require('blink.cmp').get_lsp_capabilities()
+      end
+      require('lspconfig')[server_name].setup(opts)
+    end,
+    ruby_lsp = function()
+      local opts = {}
+      if completion_engine == 'blink' then
+        opts.capabilities = require('blink.cmp').get_lsp_capabilities()
+      end
+      opts.cmd = { "ruby-lsp" }
+      require('lspconfig').ruby_lsp.setup(opts)
+    end,
   }
 })
 EOF
 
 " lspkind
 lua <<EOF
-local lspkind = require('lspkind')
-local cmp = require('cmp')
-cmp.setup {
-  formatting = {
-    format = lspkind.cmp_format({
-      mode = 'symbol', -- show only symbol annotations
-      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-      ellipsis_char = '...' -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-    })
+local completion_engine = vim.g.completion_engine
+
+if completion_engine == 'nvim-cmp' then
+  local lsp_zero = require('lsp-zero')
+  local lspkind = require('lspkind')
+  local cmp = require('cmp')
+  local cmp_action = lsp_zero.cmp_action()
+
+  cmp.setup {
+    mapping = cmp.mapping.preset.insert({
+      -- Enter key to confirm completion
+      ['<CR>'] = cmp.mapping.confirm({select = false}),
+
+      -- Ctrl+Space to trigger completion menu
+      ['<C-Space>'] = cmp.mapping.complete(),
+
+      -- Navigate between snippet placeholder
+      ['<C-f>'] = cmp_action.luasnip_jump_forward(),
+      ['<C-b>'] = cmp_action.luasnip_jump_backward(),
+
+      -- Scroll up and down in the completion documentation
+      ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-d>'] = cmp.mapping.scroll_docs(4),
+
+      ['<Tab>'] = cmp_action.luasnip_supertab(),
+      ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
+    }),
+    sources = {
+      {name = 'nvim_lsp'},
+      {name = 'luasnip'},
+    },
+    formatting = {
+      format = lspkind.cmp_format({
+        mode = 'symbol', -- show only symbol annotations
+        maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+        ellipsis_char = '...' -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+      })
+    }
   }
-}
+elseif completion_engine == 'blink' then
+  require('blink.cmp').setup({
+    -- 'default' for control-y, 'super-tab' for tab, 'enter' for enter
+    -- or 'full' for all of the above
+    keymap = {
+      preset = 'enter',
+      ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+      ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+    },
+
+    appearance = {
+      use_nvim_cmp_as_default = true,
+      nerd_font_variant = 'mono'
+    },
+
+    completion = {
+      list = {
+        selection = {
+          preselect = true,
+          auto_insert = true
+        }
+      },
+      menu = {
+        draw = {
+          columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+        }
+      }
+    },
+
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
+    },
+  })
+end
 EOF
 
 " Running files
