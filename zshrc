@@ -10,12 +10,6 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Load nvm
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-
 # Load cargo
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
@@ -31,10 +25,16 @@ then
 fi
 
 # FFI
-export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
+# export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
+# export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
+# export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
 
+# export LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix readline)/lib -L$(brew --prefix zlib)/lib"
+# export CPPFLAGS="-I$(brew --prefix openssl)/include -I$(brew --prefix readline)/include -I$(brew --prefix zlib)/include"
+# export PKG_CONFIG_PATH="$(brew --prefix openssl)/lib/pkgconfig:$(brew --prefix readline)/lib/pkgconfig:$(brew --prefix zlib)/lib/pkgconfig"
+
+# Prevent errors in rails c
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 export EDITOR=nvim
 export GIT_EDITOR=nvim
@@ -82,6 +82,7 @@ alias :q='exit'
 # vimrc editing
 alias ve='vim ~/.config/nvim/init.vim'
 alias ie='vim ~/.ideavimrc'
+alias ae='nvim ~/.config/alacritty/alacritty.toml'
 
 # Git Aliases
 alias g='git'
@@ -95,6 +96,7 @@ alias gshw='git show'
 alias gshow='git show'
 alias gi='vim .gitignore'
 alias gcm='git ci -m'
+alias gcn='git ci --no-verify -m'
 alias gcim='git ci -m'
 alias gci='git ci'
 alias gco='git co'
@@ -134,7 +136,7 @@ alias bi='BUNDLE_FORCE_RUBY_PLATFORM=true bundle install'
 # Spring
 alias ss='spring stop'
 
-alias rdm='bin/rake db:migrate && bin/rake db:migrate RAILS_ENV=test'
+alias rdm='bin/rake db:migrate && bin/rake db:test:prepare'
 alias rdmr='bin/rake db:migrate:redo'
 alias rdmt='bin/rake db:migrate RAILS_ENV=test'
 alias rdr='bin/rake db:rollback && bin/rake db:rollback RAILS_ENV=test'
@@ -162,7 +164,12 @@ alias dcu='docker compose up'
 alias dcd='docker compose down'
 alias dcps='docker compose ps'
 
+# Gradle
+alias gr='./gradlew bootRun'
+alias gb='./gradlew -x build'
+
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
 
 # function python() {

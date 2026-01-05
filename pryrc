@@ -30,18 +30,6 @@ default_command_set = Pry::CommandSet.new do
       output.puts [file, line, method]
     end
   end
-
-  command 'conx', 'Connect to analysis db' do
-    output.puts 'connecting'
-    if ENV['READ_ONLY_CREDENTIALS']
-      output.puts ActiveRecord::Base.establish_connection(ENV['READ_ONLY_CREDENTIALS'])
-    end
-  end
-
-  command 'local', 'Connect to local db' do
-    output.puts 'going local'
-    output.puts ActiveRecord::Base.establish_connection(:development)
-  end
 end
 
 Pry.config.commands.import default_command_set
@@ -58,6 +46,14 @@ class Array
   def credits_per_group
     group_by{ |x| x.group }.map { |k, v| [k, v.sum(&:credits)] }.to_h
   end
+
+  def total_memory_size
+    total_size = ObjectSpace.memsize_of(self)
+    each do |element|
+      total_size += ObjectSpace.memsize_of(element)
+    end
+    total_size
+  end
 end
 
 class Hash
@@ -67,4 +63,4 @@ class Hash
 end
 
 local_pryrc = File.expand_path '~/.pryrc.local'
-load local_pryrc if File.exists? local_pryrc
+load local_pryrc if File.exist? local_pryrc
