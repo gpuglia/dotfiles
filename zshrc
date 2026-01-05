@@ -128,6 +128,8 @@ alias gpl='git pull'
 alias gnb='git nb' # new branch aka checkout -b
 alias grb='git recent-branches'
 alias amend='g ci --amend --no-edit'
+alias gpm='g peek'
+alias gpb='g peek -'
 
 # Ruby
 alias c='rails c'
