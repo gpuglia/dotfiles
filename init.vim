@@ -539,36 +539,69 @@ EOF
 
 " LSP
 lua <<EOF
+-- Suppress lspconfig deprecation warning until mason-lspconfig updates
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+})
+
+-- Filter out the lspconfig deprecation warning
+local notify = vim.notify
+vim.notify = function(msg, level, opts)
+  if type(msg) == "string" and msg:match("lspconfig.*deprecated") then
+    return
+  end
+  notify(msg, level, opts)
+end
+
+-- Also suppress vim.deprecate warnings from lspconfig
+local deprecate = vim.deprecate
+vim.deprecate = function(...)
+  local args = {...}
+  if args[1] and type(args[1]) == "string" and args[1]:match("lspconfig") then
+    return
+  end
+  deprecate(...)
+end
+
 local lsp_zero = require('lsp-zero')
 local completion_engine = vim.g.completion_engine
 
-lsp_zero.on_attach(function(client, bufnr)
-  -- see :help lsp-zero-keybindings
-  -- to learn the available actions
-  lsp_zero.default_keymaps({buffer = bufnr})
-end)
+-- Common capabilities for all servers
+local function get_capabilities()
+  local caps = vim.lsp.protocol.make_client_capabilities()
+  if completion_engine == 'blink' then
+    caps = vim.tbl_deep_extend('force', caps, require('blink.cmp').get_lsp_capabilities())
+  end
+  return caps
+end
 
--- see :help lsp-zero-guide:integrate-with-mason-nvim
--- to learn how to use mason.nvim with lsp-zero
+-- Common on_attach for all servers
+local function on_attach(client, bufnr)
+  -- lsp-zero default keymaps
+  lsp_zero.default_keymaps({buffer = bufnr})
+end
+
+-- Setup Mason-managed servers
 require('mason').setup({})
 require('mason-lspconfig').setup({
   handlers = {
     function(server_name)
-      local opts = {}
-      if completion_engine == 'blink' then
-        opts.capabilities = require('blink.cmp').get_lsp_capabilities()
-      end
-      require('lspconfig')[server_name].setup(opts)
-    end,
-    ruby_lsp = function()
-      local opts = {}
-      if completion_engine == 'blink' then
-        opts.capabilities = require('blink.cmp').get_lsp_capabilities()
-      end
-      opts.cmd = { "ruby-lsp" }
-      require('lspconfig').ruby_lsp.setup(opts)
+      require('lspconfig')[server_name].setup({
+        capabilities = get_capabilities(),
+        on_attach = on_attach,
+      })
     end,
   }
+})
+
+-- Setup ruby-lsp separately (installed globally, not via Mason)
+require('lspconfig').ruby_lsp.setup({
+  cmd = { "ruby-lsp" },
+  capabilities = get_capabilities(),
+  on_attach = on_attach,
 })
 EOF
 
