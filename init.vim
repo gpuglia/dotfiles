@@ -4,7 +4,6 @@ call plug#begin()
 Plug 'airblade/vim-gitgutter'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'benmills/vimux'
-Plug 'bling/vim-airline'
 Plug 'chrisbra/csv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ecomba/vim-ruby-refactoring'
@@ -37,12 +36,12 @@ Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'ggandor/leap.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-lualine/lualine.nvim'
 
 " Language server management
 Plug 'williamboman/mason.nvim'
@@ -68,6 +67,15 @@ Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 " Tree navigation
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-tree/nvim-tree.lua'
+
+" Neotest - testing framework
+Plug 'nvim-neotest/nvim-nio'
+Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'nvim-neotest/neotest'
+Plug 'olimorris/neotest-rspec'
+Plug 'nvim-neotest/neotest-python'
+Plug 'fredrikaverpil/neotest-golang'
+Plug 'jfpedroza/neotest-elixir'
 
 " JS/TS
 " Plug 'pangloss/vim-javascript'
@@ -121,7 +129,6 @@ if has('nvim') || has('termguicolors')
   set termguicolors
 endif
 
-" colorscheme jellybeans-nvim
 colorscheme jellybeans-nvim
 " colorscheme rose-pine
 
@@ -139,8 +146,6 @@ colorscheme jellybeans-nvim
 " EOF
 
 let g:tokyonight_style = "day"
-" Airline
-let g:airline_powerline_fonts = 1
 
 " Appearance
 set t_ut=
