@@ -31,6 +31,7 @@ Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
+Plug 'kdheepak/lazygit.nvim'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
@@ -131,6 +132,7 @@ endif
 
 colorscheme jellybeans-nvim
 " colorscheme rose-pine
+" colorscheme catppuccin-mocha
 
 " lua << EOF
 " local lush = require('lush')
@@ -273,6 +275,9 @@ nnoremap <Leader>gr  :Gread<CR>
 nnoremap <Leader>gb  :Git blame<CR>
 map <Leader>gh :GBrowse master:%<CR> " GitHub
 map <Leader>gH :GBrowse! master:%<CR> " GitHub
+
+" Lazygit
+nnoremap <Leader>lg :LazyGit<CR>
 
 " NERDTree
 nnoremap <Leader>ntt :NvimTreeToggle<CR>
@@ -447,7 +452,13 @@ require'nvim-treesitter.configs'.setup {
 EOF
 
 " Leap
-lua require('leap').add_default_mappings()
+lua << EOF
+local leap = require('leap')
+-- Set up default mappings (s, S, gs)
+vim.keymap.set({'n', 'x', 'o'}, 's',  '<Plug>(leap-forward)')
+vim.keymap.set({'n', 'x', 'o'}, 'S',  '<Plug>(leap-backward)')
+vim.keymap.set({'n', 'x', 'o'}, 'gs', '<Plug>(leap-from-window)')
+EOF
 
 " Goyo
 " From https://github.com/junegunn/goyo.vim
