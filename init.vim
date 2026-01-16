@@ -74,6 +74,7 @@ Plug 'nvim-neotest/nvim-nio'
 Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'nvim-neotest/neotest'
 Plug 'olimorris/neotest-rspec'
+Plug 'zidhuss/neotest-minitest'
 Plug 'nvim-neotest/neotest-python'
 Plug 'fredrikaverpil/neotest-golang'
 Plug 'jfpedroza/neotest-elixir'
@@ -238,7 +239,7 @@ nnoremap <silent> <Leader>qc :ccl<CR>
 
 
 " Telescope
-nnoremap <leader>t <cmd>Telescope find_files<cr>
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
@@ -652,3 +653,90 @@ EOF
 autocmd FileType elixir nnoremap <leader>x :w <enter> :!elixir %<cr>
 autocmd FileType ruby   nnoremap <leader>x :w <enter> :!ruby %<cr>
 autocmd FileType go     nnoremap <leader>x :w <enter> :!go run %<cr>
+
+" Neotest configuration
+lua << EOF
+require("neotest").setup({
+  adapters = {
+    require("neotest-rspec")({
+      rspec_cmd = function()
+        -- Check if bin/rspec exists in the project root
+        if vim.fn.filereadable("bin/rspec") == 1 then
+          return vim.tbl_flatten({
+            "bin/rspec",
+          })
+        else
+          return vim.tbl_flatten({
+            "bundle",
+            "exec",
+            "rspec",
+          })
+        end
+      end
+    }),
+    require("neotest-minitest"),
+    require("neotest-python")({
+      dap = { justMyCode = false },
+    }),
+    require("neotest-golang"),
+    require("neotest-elixir"),
+  },
+})
+EOF
+
+" Neotest keymaps (using ,t* prefix)
+" vim-test uses: <leader>s, <leader>ra, <leader>l
+" neotest uses: <leader>t* prefix
+nnoremap <leader>tn :lua require("neotest").run.run()<CR>
+nnoremap <leader>tf :lua require("neotest").run.run(vim.fn.expand("%"))<CR>
+nnoremap <leader>tl :lua require("neotest").run.run_last()<CR>
+nnoremap <leader>td :lua require("neotest").run.run({strategy = "dap"})<CR>
+nnoremap <leader>ts :lua require("neotest").run.stop()<CR>
+nnoremap <leader>ta :lua require("neotest").run.attach()<CR>
+nnoremap <leader>to :lua require("neotest").output.open({ enter = true })<CR>
+nnoremap <leader>tO :lua require("neotest").output_panel.toggle()<CR>
+nnoremap <leader>tt :lua require("neotest").summary.toggle()<CR>
+
+" Lualine configuration
+lua << EOF
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
+EOF
