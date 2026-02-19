@@ -1,7 +1,7 @@
 set nocompatible
 
 call plug#begin()
-Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'benmills/vimux'
 Plug 'chrisbra/csv.vim'

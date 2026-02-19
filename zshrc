@@ -36,6 +36,7 @@ fi
 # Prevent errors in rails c
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
+export VISUAL=nvim
 export EDITOR=nvim
 export GIT_EDITOR=nvim
 export BUNDLER_EDITOR=nvim
@@ -71,17 +72,19 @@ alias lsg='ll | grep'
 # Vim
 alias vi='nvim'
 alias vim='nvim'
+# alias lvi='NVIM_APPNAME=nvim-lazyvim nvim'
 
 # Alias Editing
 alias ze='vi ~/.zshrc' #zshrc edit
+alias zloc='vi ~/.zshrc.local' #zshrc local edit
 alias zr='source ~/.zshrc'  #zshrc reload
 
 # mimic vim functions
 alias :q='exit'
 
 # vimrc editing
-alias ve='vim ~/.config/nvim/init.vim'
-alias ie='vim ~/.ideavimrc'
+alias ve='nvim ~/.config/nvim/init.vim'
+alias ie='nvim ~/.ideavimrc'
 alias ae='nvim ~/.config/alacritty/alacritty.toml'
 
 # Git Aliases
@@ -130,10 +133,12 @@ alias grb='git recent-branches'
 alias amend='g ci --amend --no-edit'
 alias gpm='g peek'
 alias gpb='g peek -'
+alias gwl='git worktree list'
+alias gwrm='git worktree remove'
 
 # Ruby
 alias c='rails c'
-alias bi='BUNDLE_FORCE_RUBY_PLATFORM=true bundle install'
+alias be='bundle exec'
 
 # Spring
 alias ss='spring stop'
