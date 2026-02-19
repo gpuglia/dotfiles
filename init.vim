@@ -40,6 +40,8 @@ Plug 'tpope/vim-surround'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'ggandor/leap.nvim'
 Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-lualine/lualine.nvim'
@@ -99,12 +101,10 @@ endif
 
 " Colors
 Plug 'rktjmp/lush.nvim'
-Plug 'whatyouhide/vim-gotham'
 Plug 'metalelf0/jellybeans-nvim'
 Plug 'folke/tokyonight.nvim'
 Plug 'rose-pine/neovim'
 Plug 'catppuccin/nvim'
-Plug 'rebelot/kanagawa.nvim'
 
 call plug#end()
 
@@ -284,6 +284,12 @@ nnoremap <Leader>lg :LazyGit<CR>
 nnoremap <Leader>ntt :NvimTreeToggle<CR>
 nnoremap <Leader>ntf :NvimTreeFindFile<CR>
 
+" Neo-tree
+nnoremap <Leader>e :Neotree toggle<CR>
+nnoremap <Leader>ef :Neotree reveal<CR>
+nnoremap <Leader>eb :Neotree toggle show buffers<CR>
+nnoremap <Leader>eg :Neotree toggle show git_status<CR>
+
 " Abbreviations
 iabbr pry binding.pry
 
@@ -415,11 +421,12 @@ command! -bang -nargs=* Rg
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.5, 'highlight': 'Comment' } }
 let g:fzf_preview_cmd = g:plug_home . "/fzf.vim/bin/preview.sh {}"
 
-noremap <leader>ff :call fzf#vim#files('', { 'source': g:FzfFilesSource(),
-      \ 'options': [
-      \   '--tiebreak=index',
-      \   '--preview', g:fzf_preview_cmd
-      \  ]})<CR>
+" Old fzf mapping - commented out in favor of Telescope
+" noremap <leader>ff :call fzf#vim#files('', { 'source': g:FzfFilesSource(),
+"       \ 'options': [
+"       \   '--tiebreak=index',
+"       \   '--preview', g:fzf_preview_cmd
+"       \  ]})<CR>
 " nnoremap <silent> <leader>t :GFiles<cr>
 nnoremap <silent> <C-p> :GFiles<cr>
 nnoremap <silent> ,m :Marks<cr>
@@ -523,6 +530,27 @@ require("nvim-tree").setup {
     width = 40,
   },
 }
+EOF
+
+" neo-tree
+lua << EOF
+require("neo-tree").setup({
+  close_if_last_window = true,
+  popup_border_style = "rounded",
+  window = {
+    width = 40,
+  },
+  filesystem = {
+    follow_current_file = { enabled = true },
+    filtered_items = {
+      hide_dotfiles = false,
+      hide_gitignored = false,
+    },
+  },
+  buffers = {
+    follow_current_file = { enabled = true },
+  },
+})
 EOF
 
 " treesitter-endwise
@@ -720,15 +748,15 @@ EOF
 " Neotest keymaps (using ,t* prefix)
 " vim-test uses: <leader>s, <leader>ra, <leader>l
 " neotest uses: <leader>t* prefix
-nnoremap <leader>tn :lua require("neotest").run.run()<CR>
-nnoremap <leader>tf :lua require("neotest").run.run(vim.fn.expand("%"))<CR>
-nnoremap <leader>tl :lua require("neotest").run.run_last()<CR>
-nnoremap <leader>td :lua require("neotest").run.run({strategy = "dap"})<CR>
-nnoremap <leader>ts :lua require("neotest").run.stop()<CR>
-nnoremap <leader>ta :lua require("neotest").run.attach()<CR>
-nnoremap <leader>to :lua require("neotest").output.open({ enter = true })<CR>
-nnoremap <leader>tO :lua require("neotest").output_panel.toggle()<CR>
-nnoremap <leader>tt :lua require("neotest").summary.toggle()<CR>
+nnoremap <silent> <leader>tn :echo "Testing nearest"<CR>:lua require("neotest").run.run()<CR>
+nnoremap <silent> <leader>tf :echo "Testing file"<CR>:lua require("neotest").run.run(vim.fn.expand("%"))<CR>
+nnoremap <silent> <leader>tl :echo "Testing last"<CR>:lua require("neotest").run.run_last()<CR>
+nnoremap <silent> <leader>td :echo "Debug test"<CR>:lua require("neotest").run.run({strategy = "dap"})<CR>
+nnoremap <silent> <leader>ts :echo "Stopping test"<CR>:lua require("neotest").run.stop()<CR>
+nnoremap <silent> <leader>ta :echo "Attaching to test"<CR>:lua require("neotest").run.attach()<CR>
+nnoremap <silent> <leader>to :lua require("neotest").output.open({ enter = true })<CR>
+nnoremap <silent> <leader>tO :lua require("neotest").output_panel.toggle()<CR>
+nnoremap <silent> <leader>tt :lua require("neotest").summary.toggle()<CR>
 
 " Lualine configuration
 lua << EOF
@@ -772,4 +800,54 @@ require('lualine').setup {
   inactive_winbar = {},
   extensions = {}
 }
+EOF
+
+" Gitsigns
+lua << EOF
+require('gitsigns').setup({
+  on_attach = function(bufnr)
+    local gitsigns = require('gitsigns')
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']g', function()
+      if vim.wo.diff then
+        vim.cmd.normal({']c', bang = true})
+      else
+        gitsigns.nav_hunk('next')
+      end
+    end)
+
+    map('n', '[g', function()
+      if vim.wo.diff then
+        vim.cmd.normal({'[c', bang = true})
+      else
+        gitsigns.nav_hunk('prev')
+      end
+    end)
+
+    -- Actions
+    map('n', '<leader>hs', gitsigns.stage_hunk)
+    map('n', '<leader>hr', gitsigns.reset_hunk)
+    map('v', '<leader>hs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+    map('v', '<leader>hr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+    map('n', '<leader>hS', gitsigns.stage_buffer)
+    map('n', '<leader>hu', gitsigns.undo_stage_hunk)
+    map('n', '<leader>hR', gitsigns.reset_buffer)
+    map('n', '<leader>hp', gitsigns.preview_hunk)
+    map('n', '<leader>hb', function() gitsigns.blame_line{full=true} end)
+    map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
+    map('n', '<leader>hd', gitsigns.diffthis)
+    map('n', '<leader>hD', function() gitsigns.diffthis('~') end)
+    map('n', '<leader>td', gitsigns.toggle_deleted)
+
+    -- Text object
+    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+})
 EOF
