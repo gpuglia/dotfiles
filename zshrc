@@ -178,6 +178,36 @@ alias gb='./gradlew -x build'
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
+# Git worktrees
+gwt() {
+  local branch="$1"
+  if [ -z "$branch" ]; then
+    echo "Usage: gwt <branch-name>"
+    return 1
+  fi
+  local project_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
+  if [ -z "$project_name" ]; then
+    echo "Error: Not in a git repository"
+    return 1
+  fi
+  local worktree_path="$HOME/code/worktrees/$project_name/$branch"
+
+  mkdir -p "$(dirname "$worktree_path")"
+
+  if git worktree add "$worktree_path" -b "gus/$branch"; then
+    if [ -n "$TMUX" ]; then
+      tmux new-window -n "$branch" -c "$worktree_path"
+    else
+      cd "$worktree_path"
+    fi
+  fi
+}
+
+# Agents
+alias oc="opencode"
+alias cx="claude"
+
+
 # Source local config
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.local"
