@@ -63,6 +63,9 @@ else
   Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'cargo build --release' }
 endif
 
+" AI autocomplete
+Plug 'supermaven-inc/supermaven-nvim'
+
 Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 
 " Tree navigation
@@ -640,14 +643,42 @@ if completion_engine == 'nvim-cmp' then
   local lspkind = require('lspkind')
   local cmp = require('cmp')
   local cmp_action = lsp_zero.cmp_action()
+  local has_supermaven, suggestion = pcall(require, 'supermaven-nvim.completion_preview')
+
+  local function accept_supermaven_suggestion()
+    if has_supermaven and suggestion.has_suggestion() then
+      vim.schedule(function()
+        pcall(suggestion.on_accept_suggestion)
+      end)
+      return true
+    end
+    return false
+  end
 
   cmp.setup {
     mapping = cmp.mapping.preset.insert({
       -- Enter key to confirm completion
       ['<CR>'] = cmp.mapping.confirm({select = false}),
 
+      -- Tab accepts Supermaven suggestion first, then cmp suggestion
+      ['<Tab>'] = cmp.mapping(function(fallback)
+        if accept_supermaven_suggestion() then
+          return
+        elseif cmp.visible() then
+          cmp.confirm({ select = true })
+        else
+          fallback()
+        end
+      end, { 'i', 's' }),
+
       -- Ctrl+Space to trigger completion menu
       ['<C-Space>'] = cmp.mapping.complete(),
+
+      -- Cycle completion entries
+      ['<C-n>'] = cmp.mapping.select_next_item(),
+      ['<C-p>'] = cmp.mapping.select_prev_item(),
+      ['<Down>'] = cmp.mapping.select_next_item(),
+      ['<Up>'] = cmp.mapping.select_prev_item(),
 
       -- Navigate between snippet placeholder
       ['<C-f>'] = cmp_action.luasnip_jump_forward(),
@@ -656,9 +687,6 @@ if completion_engine == 'nvim-cmp' then
       -- Scroll up and down in the completion documentation
       ['<C-u>'] = cmp.mapping.scroll_docs(-4),
       ['<C-d>'] = cmp.mapping.scroll_docs(4),
-
-      ['<Tab>'] = cmp_action.luasnip_supertab(),
-      ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
     }),
     sources = {
       {name = 'nvim_lsp'},
@@ -673,13 +701,21 @@ if completion_engine == 'nvim-cmp' then
     }
   }
 elseif completion_engine == 'blink' then
+  local blink = require('blink.cmp')
+  local has_supermaven, suggestion = pcall(require, 'supermaven-nvim.completion_preview')
+
   require('blink.cmp').setup({
     -- 'default' for control-y, 'super-tab' for tab, 'enter' for enter
     -- or 'full' for all of the above
     keymap = {
       preset = 'enter',
-      ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+      ['<Tab>'] = {}, -- handled by custom keymap below
+      ['<C-l>'] = { 'select_and_accept', 'fallback' }, -- alternative accept for Blink
       ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+      ['<Up>'] = { 'select_prev', 'fallback' },
+      ['<Down>'] = { 'select_next', 'fallback' },
+      ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+      ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
     },
 
     appearance = {
@@ -705,7 +741,47 @@ elseif completion_engine == 'blink' then
       default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
   })
+
+  -- Tab behavior (Blink + Supermaven):
+  -- 1) accept Supermaven inline suggestion
+  -- 2) accept Blink selected/first item
+  -- 3) jump snippet forward
+  -- 4) insert a literal tab
+  local supermaven_accept_key = vim.api.nvim_replace_termcodes('<C-g>', true, false, true)
+  local literal_tab = vim.api.nvim_replace_termcodes('<Tab>', true, false, true)
+
+  vim.keymap.set('i', '<Tab>', function()
+    if has_supermaven and suggestion.has_suggestion() then
+      vim.api.nvim_feedkeys(supermaven_accept_key, 'i', true)
+      return
+    end
+
+    if blink.is_menu_visible() then
+      blink.select_and_accept()
+      return
+    end
+
+    if blink.snippet_active({ direction = 1 }) then
+      blink.snippet_forward()
+      return
+    end
+
+    vim.api.nvim_feedkeys(literal_tab, 'i', true)
+  end, { silent = true })
 end
+EOF
+
+" Supermaven
+lua << EOF
+require("supermaven-nvim").setup({
+  disable_inline_completion = false,
+  disable_keymaps = false,
+  keymaps = {
+    accept_suggestion = "<C-g>",
+    clear_suggestion = "<C-]>",
+    accept_word = "<C-j>",
+  },
+})
 EOF
 
 " Running files
