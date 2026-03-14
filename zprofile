@@ -44,7 +44,7 @@ typeset -gU cdpath fpath mailpath path
 # Set the list of directories that Zsh searches for programs.
 path=(
   $HOME/{,s}bin(N)
-  $HOME/.rbenv/{bin,shims}
+  $HOME/.asdf/{bin,shims}
   /opt/{homebrew,local}/{,s}bin(N)
   /usr/local/{bin,sbin}
   $path
