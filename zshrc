@@ -158,6 +158,7 @@ alias tat='tmux attach-session -t'
 alias mux='tmuxinator'
 alias tns='tmux new-session -s'
 alias tls='tmux list-sessions'
+alias tks='tmux kill-session -t'
 
 # Homebrew
 alias brewu='brew update && brew upgrade --all && brew cleanup && brew prune && brew doctor'
