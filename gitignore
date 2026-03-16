@@ -60,3 +60,6 @@ logseq/.recycle
 # asdf
 .tool-versions
 **/.tool-versions
+
+# claude code
+.claude/settings.local.json
