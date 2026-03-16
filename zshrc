@@ -208,7 +208,6 @@ gwt() {
 alias oc="opencode"
 alias cx="claude"
 
-
 # Source local config
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.local"
