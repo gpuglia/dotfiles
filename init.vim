@@ -281,10 +281,6 @@ map <Leader>gH :GBrowse! master:%<CR> " GitHub
 " Lazygit
 nnoremap <Leader>lg :LazyGit<CR>
 
-" NERDTree
-nnoremap <Leader>ntt :NvimTreeToggle<CR>
-nnoremap <Leader>ntf :NvimTreeFindFile<CR>
-
 " Neo-tree
 nnoremap <Leader>e :Neotree toggle<CR>
 nnoremap <Leader>ef :Neotree reveal<CR>
