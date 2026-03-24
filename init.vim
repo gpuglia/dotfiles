@@ -53,6 +53,7 @@ Plug 'neovim/nvim-lspconfig'
 
 " Autocompletion
 Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'cargo build --release' }
+Plug 'saghen/blink.compat', { 'tag': '2.*' }
 
 " AI autocomplete
 Plug 'supermaven-inc/supermaven-nvim'
@@ -630,7 +631,6 @@ EOF
 " Blink completion setup
 lua <<EOF
 local blink = require('blink.cmp')
-local has_supermaven, suggestion = pcall(require, 'supermaven-nvim.completion_preview')
 
 require('blink.cmp').setup({
   -- 'default' for control-y, 'super-tab' for tab, 'enter' for enter
@@ -666,24 +666,23 @@ require('blink.cmp').setup({
   },
 
   sources = {
-    default = { 'lsp', 'path', 'snippets', 'buffer' },
+    default = { 'lsp', 'path', 'snippets', 'buffer', 'supermaven' },
+    providers = {
+      supermaven = {
+        name = 'supermaven',
+        module = 'blink.compat.source',
+      },
+    },
   },
 })
 
 -- Tab behavior (Blink + Supermaven):
--- 1) accept Supermaven inline suggestion
--- 2) accept Blink selected/first item
--- 3) jump snippet forward
--- 4) insert a literal tab
-local supermaven_accept_key = vim.api.nvim_replace_termcodes('<C-g>', true, false, true)
+-- 1) accept Blink selected/first item
+-- 2) jump snippet forward
+-- 3) insert a literal tab
 local literal_tab = vim.api.nvim_replace_termcodes('<Tab>', true, false, true)
 
 vim.keymap.set('i', '<Tab>', function()
-  if has_supermaven and suggestion.has_suggestion() then
-    vim.api.nvim_feedkeys(supermaven_accept_key, 'i', true)
-    return
-  end
-
   if blink.is_menu_visible() then
     blink.select_and_accept()
     return
@@ -701,13 +700,8 @@ EOF
 " Supermaven
 lua << EOF
 require("supermaven-nvim").setup({
-  disable_inline_completion = false,
-  disable_keymaps = false,
-  keymaps = {
-    accept_suggestion = "<C-g>",
-    clear_suggestion = "<C-]>",
-    accept_word = "<C-j>",
-  },
+  disable_inline_completion = true, -- blink.cmp handles display
+  disable_keymaps = true,           -- blink.cmp handles acceptance
 })
 EOF
 
