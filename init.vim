@@ -53,7 +53,6 @@ Plug 'neovim/nvim-lspconfig'
 
 " Autocompletion
 Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'cargo build --release' }
-Plug 'saghen/blink.compat', { 'tag': '2.*' }
 
 " AI autocomplete
 Plug 'supermaven-inc/supermaven-nvim'
@@ -668,12 +667,6 @@ require('blink.cmp').setup({
 
   sources = {
     default = { 'lsp', 'path', 'snippets', 'buffer' },
-    providers = {
-      ["99"] = {
-        name = "99",
-        module = "blink.compat.source",
-      },
-    },
   },
 })
 
