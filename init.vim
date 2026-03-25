@@ -1,5 +1,8 @@
 set nocompatible
 
+" vim-tmux-navigator: don't wrap at edges
+let g:tmux_navigator_no_wrap = 1
+
 call plug#begin()
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'AndrewRadev/splitjoin.vim'
@@ -217,12 +220,6 @@ nnoremap <Leader>. <c-^>
 
 " clear search buffer
 nnoremap <silent> // :nohlsearch<CR>
-
-" easier navigation between split windows
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-H> <C-W>h
-nnoremap <C-L> <C-W>l
 
 " faster splits
 nnoremap <silent> vv :vsp<CR>
