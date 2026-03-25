@@ -1,5 +1,8 @@
 set nocompatible
 
+" vim-tmux-navigator: don't wrap at edges
+let g:tmux_navigator_no_wrap = 1
+
 call plug#begin()
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'AndrewRadev/splitjoin.vim'
@@ -50,18 +53,10 @@ Plug 'williamboman/mason-lspconfig.nvim'
 
 " LSP support
 Plug 'neovim/nvim-lspconfig'
-Plug 'onsails/lspkind.nvim'
 
 " Autocompletion
-let g:completion_engine = 'blink' " 'blink' or 'nvim-cmp'
-
-if g:completion_engine == 'nvim-cmp'
-  Plug 'hrsh7th/nvim-cmp'
-  Plug 'hrsh7th/cmp-nvim-lsp'
-  Plug 'L3MON4D3/LuaSnip'
-else
-  Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'cargo build --release' }
-endif
+Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'cargo build --release' }
+Plug 'saghen/blink.compat', { 'tag': '2.*' }
 
 " AI autocomplete
 Plug 'supermaven-inc/supermaven-nvim'
@@ -226,12 +221,6 @@ nnoremap <Leader>. <c-^>
 " clear search buffer
 nnoremap <silent> // :nohlsearch<CR>
 
-" easier navigation between split windows
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-H> <C-W>h
-nnoremap <C-L> <C-W>l
-
 " faster splits
 nnoremap <silent> vv :vsp<CR>
 " nnoremap <silent> ss :sp<CR>
@@ -280,10 +269,6 @@ map <Leader>gH :GBrowse! master:%<CR> " GitHub
 
 " Lazygit
 nnoremap <Leader>lg :LazyGit<CR>
-
-" NERDTree
-nnoremap <Leader>ntt :NvimTreeToggle<CR>
-nnoremap <Leader>ntf :NvimTreeFindFile<CR>
 
 " Neo-tree
 nnoremap <Leader>e :Neotree toggle<CR>
@@ -596,14 +581,11 @@ vim.deprecate = function(...)
 end
 
 local lsp_zero = require('lsp-zero')
-local completion_engine = vim.g.completion_engine
 
 -- Common capabilities for all servers
 local function get_capabilities()
   local caps = vim.lsp.protocol.make_client_capabilities()
-  if completion_engine == 'blink' then
-    caps = vim.tbl_deep_extend('force', caps, require('blink.cmp').get_lsp_capabilities())
-  end
+  caps = vim.tbl_deep_extend('force', caps, require('blink.cmp').get_lsp_capabilities())
   return caps
 end
 
@@ -632,155 +614,91 @@ require('lspconfig').ruby_lsp.setup({
   capabilities = get_capabilities(),
   on_attach = on_attach,
 })
+
+-- Setup kotlin-language-server separately (installed via Homebrew)
+require('lspconfig').kotlin_language_server.setup({
+  cmd = { "/opt/homebrew/bin/kotlin-lsp" },
+  capabilities = get_capabilities(),
+  on_attach = on_attach,
+  filetypes = { "kotlin" },
+  root_dir = require('lspconfig').util.root_pattern("settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"),
+})
 EOF
 
-" lspkind
+" Blink completion setup
 lua <<EOF
-local completion_engine = vim.g.completion_engine
+local blink = require('blink.cmp')
 
-if completion_engine == 'nvim-cmp' then
-  local lsp_zero = require('lsp-zero')
-  local lspkind = require('lspkind')
-  local cmp = require('cmp')
-  local cmp_action = lsp_zero.cmp_action()
-  local has_supermaven, suggestion = pcall(require, 'supermaven-nvim.completion_preview')
+require('blink.cmp').setup({
+  -- 'default' for control-y, 'super-tab' for tab, 'enter' for enter
+  -- or 'full' for all of the above
+  keymap = {
+    preset = 'enter',
+    ['<Tab>'] = {}, -- handled by custom keymap below
+    ['<C-l>'] = { 'select_and_accept', 'fallback' }, -- alternative accept for Blink
+    ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+    ['<Up>'] = { 'select_prev', 'fallback' },
+    ['<Down>'] = { 'select_next', 'fallback' },
+    ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+    ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
+  },
 
-  local function accept_supermaven_suggestion()
-    if has_supermaven and suggestion.has_suggestion() then
-      vim.schedule(function()
-        pcall(suggestion.on_accept_suggestion)
-      end)
-      return true
-    end
-    return false
-  end
+  appearance = {
+    use_nvim_cmp_as_default = true,
+    nerd_font_variant = 'mono'
+  },
 
-  cmp.setup {
-    mapping = cmp.mapping.preset.insert({
-      -- Enter key to confirm completion
-      ['<CR>'] = cmp.mapping.confirm({select = false}),
-
-      -- Tab accepts Supermaven suggestion first, then cmp suggestion
-      ['<Tab>'] = cmp.mapping(function(fallback)
-        if accept_supermaven_suggestion() then
-          return
-        elseif cmp.visible() then
-          cmp.confirm({ select = true })
-        else
-          fallback()
-        end
-      end, { 'i', 's' }),
-
-      -- Ctrl+Space to trigger completion menu
-      ['<C-Space>'] = cmp.mapping.complete(),
-
-      -- Cycle completion entries
-      ['<C-n>'] = cmp.mapping.select_next_item(),
-      ['<C-p>'] = cmp.mapping.select_prev_item(),
-      ['<Down>'] = cmp.mapping.select_next_item(),
-      ['<Up>'] = cmp.mapping.select_prev_item(),
-
-      -- Navigate between snippet placeholder
-      ['<C-f>'] = cmp_action.luasnip_jump_forward(),
-      ['<C-b>'] = cmp_action.luasnip_jump_backward(),
-
-      -- Scroll up and down in the completion documentation
-      ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    }),
-    sources = {
-      {name = 'nvim_lsp'},
-      {name = 'luasnip'},
-    },
-    formatting = {
-      format = lspkind.cmp_format({
-        mode = 'symbol', -- show only symbol annotations
-        maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-        ellipsis_char = '...' -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-      })
-    }
-  }
-elseif completion_engine == 'blink' then
-  local blink = require('blink.cmp')
-  local has_supermaven, suggestion = pcall(require, 'supermaven-nvim.completion_preview')
-
-  require('blink.cmp').setup({
-    -- 'default' for control-y, 'super-tab' for tab, 'enter' for enter
-    -- or 'full' for all of the above
-    keymap = {
-      preset = 'enter',
-      ['<Tab>'] = {}, -- handled by custom keymap below
-      ['<C-l>'] = { 'select_and_accept', 'fallback' }, -- alternative accept for Blink
-      ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
-      ['<Up>'] = { 'select_prev', 'fallback' },
-      ['<Down>'] = { 'select_next', 'fallback' },
-      ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
-      ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
-    },
-
-    appearance = {
-      use_nvim_cmp_as_default = true,
-      nerd_font_variant = 'mono'
-    },
-
-    completion = {
-      list = {
-        selection = {
-          preselect = true,
-          auto_insert = true
-        }
-      },
-      menu = {
-        draw = {
-          columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
-        }
+  completion = {
+    list = {
+      selection = {
+        preselect = true,
+        auto_insert = true
       }
     },
+    menu = {
+      draw = {
+        columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+      }
+    }
+  },
 
-    sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+  sources = {
+    default = { 'lsp', 'path', 'snippets', 'buffer', 'supermaven' },
+    providers = {
+      supermaven = {
+        name = 'supermaven',
+        module = 'blink.compat.source',
+      },
     },
-  })
+  },
+})
 
-  -- Tab behavior (Blink + Supermaven):
-  -- 1) accept Supermaven inline suggestion
-  -- 2) accept Blink selected/first item
-  -- 3) jump snippet forward
-  -- 4) insert a literal tab
-  local supermaven_accept_key = vim.api.nvim_replace_termcodes('<C-g>', true, false, true)
-  local literal_tab = vim.api.nvim_replace_termcodes('<Tab>', true, false, true)
+-- Tab behavior (Blink + Supermaven):
+-- 1) accept Blink selected/first item
+-- 2) jump snippet forward
+-- 3) insert a literal tab
+local literal_tab = vim.api.nvim_replace_termcodes('<Tab>', true, false, true)
 
-  vim.keymap.set('i', '<Tab>', function()
-    if has_supermaven and suggestion.has_suggestion() then
-      vim.api.nvim_feedkeys(supermaven_accept_key, 'i', true)
-      return
-    end
+vim.keymap.set('i', '<Tab>', function()
+  if blink.is_menu_visible() then
+    blink.select_and_accept()
+    return
+  end
 
-    if blink.is_menu_visible() then
-      blink.select_and_accept()
-      return
-    end
+  if blink.snippet_active({ direction = 1 }) then
+    blink.snippet_forward()
+    return
+  end
 
-    if blink.snippet_active({ direction = 1 }) then
-      blink.snippet_forward()
-      return
-    end
-
-    vim.api.nvim_feedkeys(literal_tab, 'i', true)
-  end, { silent = true })
-end
+  vim.api.nvim_feedkeys(literal_tab, 'i', true)
+end, { silent = true })
 EOF
 
 " Supermaven
 lua << EOF
 require("supermaven-nvim").setup({
-  disable_inline_completion = false,
-  disable_keymaps = false,
-  keymaps = {
-    accept_suggestion = "<C-g>",
-    clear_suggestion = "<C-]>",
-    accept_word = "<C-j>",
-  },
+  disable_inline_completion = true, -- blink.cmp handles display
+  disable_keymaps = true,           -- blink.cmp handles acceptance
 })
 EOF
 

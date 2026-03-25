@@ -208,6 +208,9 @@ gwt() {
 alias oc="opencode"
 alias cx="claude"
 
+# try init
+eval "$(try init ~/code/tries)"
+
 # Source local config
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.local"
