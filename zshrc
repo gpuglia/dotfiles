@@ -14,7 +14,9 @@ fi
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
 # asdf
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+# . /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+. "$HOME/.asdf/asdf.sh"
 
 if type brew &>/dev/null
 then
@@ -40,6 +42,7 @@ export VISUAL=nvim
 export EDITOR=nvim
 export GIT_EDITOR=nvim
 export BUNDLER_EDITOR=nvim
+
 
 # Prompt
 prompt pure
@@ -178,6 +181,7 @@ alias gb='./gradlew -x build'
 
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+export PATH=~/.mix/escripts:$PATH
 
 # Git worktrees
 gwt() {
@@ -211,7 +215,11 @@ alias cx="claude"
 # try init
 eval "$(try init ~/code/tries)"
 
+# Elixir history
+export ERL_AFLAGS="-kernel shell_history enabled"
+
 # Source local config
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.local"
 fi
+export PATH="$HOME/.local/bin:$PATH"
