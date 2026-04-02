@@ -73,25 +73,10 @@ Plug 'nvim-neotest/neotest-python'
 Plug 'fredrikaverpil/neotest-golang'
 Plug 'jfpedroza/neotest-elixir'
 
-" Plug 'YankRing.vim'
-if has('nvim')
-  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  " Plug 'etordera/deoplete-ruby'
-  " Plug 'autozimu/LanguageClient-neovim', {
-  "   \ 'branch': 'next',
-  "   \ 'do': 'bash install.sh',
-  "   \ }
-else
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-
 " Colors
 Plug 'rktjmp/lush.nvim'
 Plug 'metalelf0/jellybeans-nvim'
 Plug 'folke/tokyonight.nvim'
-Plug 'rose-pine/neovim'
-Plug 'catppuccin/nvim'
 
 call plug#end()
 
