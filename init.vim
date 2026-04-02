@@ -1,4 +1,5 @@
 set nocompatible
+packadd matchit
 
 " vim-tmux-navigator: don't wrap at edges
 let g:tmux_navigator_no_wrap = 1
@@ -6,12 +7,13 @@ let g:tmux_navigator_no_wrap = 1
 let g:tmux_navigator_no_mappings = 1
 
 call plug#begin()
-Plug 'lewis6991/gitsigns.nvim'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'akinsho/toggleterm.nvim', {'tag': '*'}
 Plug 'benmills/vimux'
 Plug 'chrisbra/csv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ecomba/vim-ruby-refactoring'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'jgdavey/tslime.vim'
 Plug 'janko-m/vim-test'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -23,7 +25,6 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'Raimondi/delimitMate'
 Plug 'RRethy/nvim-treesitter-endwise'
-Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-commentary'
@@ -71,12 +72,6 @@ Plug 'zidhuss/neotest-minitest'
 Plug 'nvim-neotest/neotest-python'
 Plug 'fredrikaverpil/neotest-golang'
 Plug 'jfpedroza/neotest-elixir'
-Plug 'akinsho/toggleterm.nvim', {'tag': '*'}
-
-" JS/TS
-" Plug 'pangloss/vim-javascript'
-" Plug 'maxmellon/vim-jsx-pretty'
-" Plug 'HerringtonDarkholme/yats.vim'
 
 " Plug 'YankRing.vim'
 if has('nvim')
