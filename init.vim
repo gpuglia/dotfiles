@@ -17,12 +17,10 @@ Plug 'janko-m/vim-test'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
-Plug 'kana/vim-textobj-user'
 Plug 'keith/investigate.vim'
 Plug 'mileszs/ack.vim'
-Plug 'nelstrom/vim-textobj-rubyblock'
-Plug 'nelstrom/vim-markdown-folding'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'Raimondi/delimitMate'
 Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'sheerun/vim-polyglot'
