@@ -2,6 +2,8 @@ set nocompatible
 
 " vim-tmux-navigator: don't wrap at edges
 let g:tmux_navigator_no_wrap = 1
+" Disable default mappings so Ctrl+\ is free for toggleterm
+let g:tmux_navigator_no_mappings = 1
 
 call plug#begin()
 Plug 'lewis6991/gitsigns.nvim'
@@ -218,6 +220,12 @@ nnoremap <Leader>. <c-^>
 
 " clear search buffer
 nnoremap <silent> // :nohlsearch<CR>
+
+" vim-tmux-navigator keymaps (manual, since we disabled defaults to free Ctrl+\)
+nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
+nnoremap <silent> <C-j> :TmuxNavigateDown<CR>
+nnoremap <silent> <C-k> :TmuxNavigateUp<CR>
+nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
 
 " faster splits
 nnoremap <silent> vv :vsp<CR>
