@@ -73,6 +73,7 @@ Plug 'zidhuss/neotest-minitest'
 Plug 'nvim-neotest/neotest-python'
 Plug 'fredrikaverpil/neotest-golang'
 Plug 'jfpedroza/neotest-elixir'
+Plug 'akinsho/toggleterm.nvim', {'tag': '*'}
 
 " JS/TS
 " Plug 'pangloss/vim-javascript'
@@ -281,7 +282,7 @@ iabbr pry binding.pry
 nnoremap <leader>s :wa<CR>\|:TestNearest<CR>
 nnoremap <leader>ra :wa<CR>\|:TestFile<CR>
 nnoremap <leader>l :wa<CR>\|:TestLast<CR>
-let test#strategy = "vimux"
+let test#strategy = "toggleterm"
 
 let test#python#runner = 'pytest'
 let test#python#pytest#executable = 'docker-compose exec web py.test'
@@ -700,9 +701,10 @@ require("supermaven-nvim").setup({
 EOF
 
 " Running files
-autocmd FileType elixir nnoremap <leader>x :w <enter> :!elixir %<cr>
-autocmd FileType ruby   nnoremap <leader>x :w <enter> :!ruby %<cr>
-autocmd FileType go     nnoremap <leader>x :w <enter> :!go run %<cr>
+autocmd FileType elixir nnoremap <leader>x :w<CR>:TermExec cmd="elixir %"<CR>
+autocmd FileType ruby   nnoremap <leader>x :w<CR>:TermExec cmd="ruby %"<CR>
+autocmd FileType go     nnoremap <leader>x :w<CR>:TermExec cmd="go run %"<CR>
+autocmd FileType rust   nnoremap <leader>x :w<CR>:TermExec cmd="cargo run"<CR>
 
 " Neotest configuration
 lua << EOF
@@ -746,6 +748,21 @@ nnoremap <silent> <leader>ta :echo "Attaching to test"<CR>:lua require("neotest"
 nnoremap <silent> <leader>to :lua require("neotest").output.open({ enter = true })<CR>
 nnoremap <silent> <leader>tO :lua require("neotest").output_panel.toggle()<CR>
 nnoremap <silent> <leader>tt :lua require("neotest").summary.toggle()<CR>
+
+" Toggleterm configuration
+lua << EOF
+require("toggleterm").setup({
+  open_mapping = [[<C-\>]],
+  direction = "float",
+  float_opts = {
+    border = "curved",
+    width = math.floor(vim.o.columns * 0.85),
+    height = math.floor(vim.o.lines * 0.85),
+  },
+  shade_terminals = true,
+  persist_mode = true,
+})
+EOF
 
 " Lualine configuration
 lua << EOF
