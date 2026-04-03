@@ -76,6 +76,8 @@ Plug 'zidhuss/neotest-minitest'
 Plug 'nvim-neotest/neotest-python'
 Plug 'fredrikaverpil/neotest-golang'
 Plug 'jfpedroza/neotest-elixir'
+Plug 'nvim-neotest/neotest-jest'
+Plug 'marilari88/neotest-vitest'
 
 " Colors
 Plug 'rktjmp/lush.nvim'
@@ -747,6 +749,13 @@ require("neotest").setup({
     }),
     require("neotest-golang"),
     require("neotest-elixir"),
+    require("neotest-jest")({
+      jestCommand = "npx jest",
+      cwd = function()
+        return vim.fn.getcwd()
+      end,
+    }),
+    require("neotest-vitest"),
   },
 })
 EOF
