@@ -21,7 +21,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'keith/investigate.vim'
 Plug 'mileszs/ack.vim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': 'main', 'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'Raimondi/delimitMate'
 Plug 'RRethy/nvim-treesitter-endwise'
@@ -412,19 +412,63 @@ map <Leader>z :VimuxZoomRunner<CR>
 
 " Treesitter
 lua << EOF
-require'nvim-treesitter.configs'.setup {
+-- nvim-treesitter main branch: setup only handles parser installation
+require('nvim-treesitter').setup({
   ensure_installed = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile" },
-  auto_install = true,
+})
 
-   highlight = {
-    enable = true,
-    disable = {},
-   },
+-- nvim-treesitter-textobjects: keymaps must be registered manually (new API no longer reads them from setup())
+require('nvim-treesitter-textobjects').setup({
+  select = { lookahead = true },
+  move  = { set_jumps = true },
+})
 
-   indent = {
-     enable = true
-   }
+local ts_select = require('nvim-treesitter-textobjects.select')
+local ts_move   = require('nvim-treesitter-textobjects.move')
+
+-- Select text objects (operator-pending + visual)
+local select_maps = {
+  ["af"] = "@function.outer",
+  ["if"] = "@function.inner",
+  ["ac"] = "@class.outer",
+  ["ic"] = "@class.inner",
+  ["aa"] = "@parameter.outer",
+  ["ia"] = "@parameter.inner",
+  ["ab"] = "@block.outer",
+  ["ib"] = "@block.inner",
 }
+for key, query in pairs(select_maps) do
+  vim.keymap.set({ "x", "o" }, key, function() ts_select.select_textobject(query, "textobjects") end, { desc = "TS select " .. query })
+end
+
+-- Move to next/previous function/class
+vim.keymap.set({ "n", "x", "o" }, "]f", function() ts_move.goto_next_start("@function.outer", "textobjects") end, { desc = "Next function start" })
+vim.keymap.set({ "n", "x", "o" }, "]c", function() ts_move.goto_next_start("@class.outer",    "textobjects") end, { desc = "Next class start" })
+vim.keymap.set({ "n", "x", "o" }, "]F", function() ts_move.goto_next_end("@function.outer",   "textobjects") end, { desc = "Next function end" })
+vim.keymap.set({ "n", "x", "o" }, "]C", function() ts_move.goto_next_end("@class.outer",      "textobjects") end, { desc = "Next class end" })
+vim.keymap.set({ "n", "x", "o" }, "[f", function() ts_move.goto_previous_start("@function.outer", "textobjects") end, { desc = "Prev function start" })
+vim.keymap.set({ "n", "x", "o" }, "[c", function() ts_move.goto_previous_start("@class.outer",    "textobjects") end, { desc = "Prev class start" })
+vim.keymap.set({ "n", "x", "o" }, "[F", function() ts_move.goto_previous_end("@function.outer",   "textobjects") end, { desc = "Prev function end" })
+vim.keymap.set({ "n", "x", "o" }, "[C", function() ts_move.goto_previous_end("@class.outer",      "textobjects") end, { desc = "Prev class end" })
+
+-- Incremental selection (native Neovim treesitter API)
+vim.keymap.set("n", "gnn", function() vim.treesitter.start() end,             { desc = "Start treesitter selection" })
+vim.keymap.set("x", "grn", function() vim.treesitter.node_incremental() end,  { desc = "Expand to parent node" })
+vim.keymap.set("x", "grc", function() vim.treesitter.scope_incremental() end, { desc = "Expand to enclosing scope" })
+vim.keymap.set("x", "grm", function() vim.treesitter.node_decremental() end,  { desc = "Shrink to child node" })
+
+-- Highlighting, indentation, and folding via FileType autocmd (pure lua, no vimscript mixing)
+local ts_filetypes = { "javascript", "typescript", "typescriptreact", "ruby", "python", "go", "elixir", "kotlin", "lua", "vim", "markdown", "sql", "dockerfile" }
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = ts_filetypes,
+  callback = function()
+    vim.treesitter.start()
+    vim.wo[0][0].foldmethod = "expr"
+    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.wo[0][0].foldenable = false
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
 EOF
 
 " Leap
@@ -521,14 +565,7 @@ require("neo-tree").setup({
 })
 EOF
 
-" treesitter-endwise
-lua << EOF
-require('nvim-treesitter.configs').setup {
-    endwise = {
-        enable = true,
-    },
-}
-EOF
+" treesitter-endwise (no config needed, works automatically)
 
 " Save before make
 " autocmd BufWritePost <buffer> make
