@@ -29,7 +29,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'kdheepak/lazygit.nvim'
+Plug 'folke/snacks.nvim'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
@@ -247,8 +247,10 @@ nnoremap <Leader>gb  :Git blame<CR>
 map <Leader>gh :GBrowse master:%<CR> " GitHub
 map <Leader>gH :GBrowse! master:%<CR> " GitHub
 
-" Lazygit
-nnoremap <Leader>lg :LazyGit<CR>
+" Lazygit (via snacks.nvim – edit opens files in this Neovim instance)
+nnoremap <Leader>lg :lua Snacks.lazygit()<CR>
+nnoremap <Leader>ll :lua Snacks.lazygit.log()<CR>
+nnoremap <Leader>lf :lua Snacks.lazygit.log_file()<CR>
 
 " Neo-tree
 nnoremap <Leader>e :Neotree toggle<CR>
