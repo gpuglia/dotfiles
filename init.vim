@@ -202,10 +202,15 @@ nnoremap <silent> <Leader>qc :ccl<CR>
 
 " Telescope
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fs <cmd>Telescope lsp_document_symbols<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
 nnoremap <leader>fc <cmd>Telescope commands<cr>
+nnoremap <leader>fc <cmd>Telescope<cr>
+nnoremap <leader>fg <cmd>Telescope git_status<cr>
+
+" Open all git-changed files in the quickfix list
+nnoremap <leader>go :cexpr system('git diff --name-only HEAD') \| copen<CR>
 
 
 
@@ -327,6 +332,7 @@ let g:splitjoin_ruby_hanging_args=0
 
 " Ack
 nnoremap <Leader>gg :Ack! -g "!spec"<Space>
+nnoremap <Leader>GG :Telescope live_grep<Space>
 " nnoremap <S-k> :Ack! <C-R><C-W><CR>
 nnoremap <S-k> :Ack! <CR>
 
