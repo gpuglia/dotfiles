@@ -110,22 +110,6 @@ if has('nvim') || has('termguicolors')
 endif
 
 colorscheme jellybeans-nvim
-" colorscheme rose-pine
-" colorscheme catppuccin-mocha
-
-" lua << EOF
-" local lush = require('lush')
-" local laserwave = require('laserwave')
-
-" local spec = lush.extends({laserwave}).with(function()
-"   return {
-"     Comment { fg = laserwave.Comment.fg, bg = laserwave.Comment.bg, gui = "NONE" },
-"   }
-" end)
-
-" lush(spec)
-" EOF
-
 let g:tokyonight_style = "day"
 
 " Appearance
