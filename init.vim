@@ -79,6 +79,9 @@ Plug 'jfpedroza/neotest-elixir'
 Plug 'nvim-neotest/neotest-jest'
 Plug 'marilari88/neotest-vitest'
 
+" Diagnostics panel
+Plug 'folke/trouble.nvim'
+
 " Colors
 Plug 'rktjmp/lush.nvim'
 Plug 'metalelf0/jellybeans-nvim'
@@ -934,3 +937,60 @@ require('gitsigns').setup({
   end
 })
 EOF
+
+" Trouble - diagnostics panel
+lua << EOF
+require("trouble").setup()
+EOF
+
+" snacks.nvim (lazygit integration: theme + nvim-remote edit)
+" Only lazygit is enabled – all other snacks modules are explicitly disabled.
+lua << EOF
+require("snacks").setup({
+  lazygit = {
+    configure = true, -- sets nvim-remote edit integration
+    config = {
+      os = { editPreset = "nvim-remote" },
+      gui = {
+        nerdFontsVersion = "3",
+        defaultBgColor = "#141414", -- match jellybeans Normal bg
+      },
+    },
+    -- Theme: maps Neovim highlight groups to lazygit colors
+    -- FloatBorder has no fg in jellybeans, so use Comment for inactive borders
+    theme = {
+      [241]                      = { fg = "Special" },
+      activeBorderColor          = { fg = "Special", bold = true },
+      cherryPickedCommitBgColor  = { fg = "Identifier" },
+      cherryPickedCommitFgColor  = { fg = "Function" },
+      defaultFgColor             = { fg = "Normal" },
+      inactiveBorderColor        = { fg = "Comment" },
+      optionsTextColor           = { fg = "Function" },
+      searchingActiveBorderColor = { fg = "Special", bold = true },
+      selectedLineBgColor        = { bg = "Visual" },
+      unstagedChangesColor       = { fg = "DiagnosticError" },
+    },
+  },
+  bigfile      = { enabled = false },
+  dashboard    = { enabled = false },
+  dim          = { enabled = false },
+  explorer     = { enabled = false },
+  gh           = { enabled = false },
+  indent       = { enabled = true },
+  image        = { enabled = false },
+  input        = { enabled = false },
+  notifier     = { enabled = false },
+  picker       = { enabled = false },
+  quickfile    = { enabled = false },
+  scope        = { enabled = false },
+  scroll       = { enabled = false },
+  statuscolumn = { enabled = false },
+  words        = { enabled = false },
+})
+EOF
+
+nnoremap <silent> <Leader>xx <cmd>Trouble diagnostics toggle<CR>
+nnoremap <silent> <Leader>xb <cmd>Trouble diagnostics toggle filter.buf=0<CR>
+nnoremap <silent> <Leader>xs <cmd>Trouble symbols toggle focus=false<CR>
+nnoremap <silent> <Leader>xl <cmd>Trouble loclist toggle<CR>
+nnoremap <silent> <Leader>xq <cmd>Trouble qflist toggle<CR>
