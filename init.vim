@@ -103,6 +103,7 @@ set incsearch     " do incremental searching
 set laststatus=2  " Always display the status line
 set autowrite
 set autoread
+set updatetime=300
 set clipboard=unnamed
 set noerrorbells visualbell t_vb=
 
@@ -165,6 +166,12 @@ set splitbelow
 " set winminheight=5
 " set winheight=999
 
+" Check for external file updates more often
+augroup auto_checktime
+  autocmd!
+  autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() !=# 'c' | checktime | endif
+augroup END
+
 " Filetypes
 augroup filetype_markdown
   au!
@@ -180,6 +187,10 @@ augroup END
 augroup filetype_kotlin
   au!
   au FileType kotlin setl sts=4 ts=4 sw=4
+augroup END
+
+augroup filetype_heex
+  autocmd BufRead,BufNewFile *.heex set filetype=heex
 augroup END
 
 " Mappings
@@ -390,13 +401,6 @@ command! -bang -nargs=* Rg
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.5, 'highlight': 'Comment' } }
 let g:fzf_preview_cmd = g:plug_home . "/fzf.vim/bin/preview.sh {}"
 
-" Old fzf mapping - commented out in favor of Telescope
-" noremap <leader>ff :call fzf#vim#files('', { 'source': g:FzfFilesSource(),
-"       \ 'options': [
-"       \   '--tiebreak=index',
-"       \   '--preview', g:fzf_preview_cmd
-"       \  ]})<CR>
-" nnoremap <silent> <leader>t :GFiles<cr>
 nnoremap <silent> <C-p> :GFiles<cr>
 nnoremap <silent> ,m :Marks<cr>
 nnoremap <silent> ,cm :Commands<cr>
@@ -413,9 +417,8 @@ map <Leader>z :VimuxZoomRunner<CR>
 
 " Treesitter
 lua << EOF
--- nvim-treesitter main branch: setup only handles parser installation
-require('nvim-treesitter').setup({
-  ensure_installed = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile" },
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile", "html", "eex", "heex" },
 })
 
 -- nvim-treesitter-textobjects: keymaps must be registered manually (new API no longer reads them from setup())

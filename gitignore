@@ -61,5 +61,6 @@ logseq/.recycle
 .tool-versions
 **/.tool-versions
 
-# claude code
+# Claude code
 .claude/settings.local.json
+.playwright-mcp
