@@ -35,7 +35,7 @@ Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
-Plug 'ggandor/leap.nvim'
+Plug 'https://codeberg.org/andyg/leap.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
