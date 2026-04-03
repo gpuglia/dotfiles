@@ -63,6 +63,10 @@ Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-tree/nvim-tree.lua'
 
+" Sidekick - symbol outline
+" Sidekick - AI assistant (NES + CLI terminal)
+Plug 'folke/sidekick.nvim'
+
 " Neotest - testing framework
 Plug 'nvim-neotest/nvim-nio'
 Plug 'antoinemadec/FixCursorHold.nvim'
@@ -642,6 +646,9 @@ require('lspconfig').kotlin_language_server.setup({
   filetypes = { "kotlin" },
   root_dir = require('lspconfig').util.root_pattern("settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"),
 })
+
+-- Copilot LSP (for sidekick.nvim NES)
+vim.lsp.enable("copilot")
 EOF
 
 " Blink completion setup
@@ -653,7 +660,13 @@ require('blink.cmp').setup({
   -- or 'full' for all of the above
   keymap = {
     preset = 'enter',
-    ['<Tab>'] = {}, -- handled by custom keymap below
+    ['<Tab>'] = {
+      'snippet_forward',
+      function() -- sidekick next edit suggestion
+        return require('sidekick').nes_jump_or_apply()
+      end,
+      'fallback',
+    },
     ['<C-l>'] = { 'select_and_accept', 'fallback' }, -- alternative accept for Blink
     ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
     ['<Up>'] = { 'select_prev', 'fallback' },
@@ -692,25 +705,6 @@ require('blink.cmp').setup({
   },
 })
 
--- Tab behavior (Blink + Supermaven):
--- 1) accept Blink selected/first item
--- 2) jump snippet forward
--- 3) insert a literal tab
-local literal_tab = vim.api.nvim_replace_termcodes('<Tab>', true, false, true)
-
-vim.keymap.set('i', '<Tab>', function()
-  if blink.is_menu_visible() then
-    blink.select_and_accept()
-    return
-  end
-
-  if blink.snippet_active({ direction = 1 }) then
-    blink.snippet_forward()
-    return
-  end
-
-  vim.api.nvim_feedkeys(literal_tab, 'i', true)
-end, { silent = true })
 EOF
 
 " Supermaven
@@ -809,8 +803,34 @@ require('lualine').setup {
   sections = {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_c = {
+      'filename',
+      {
+        function() return " " end,
+        color = function()
+          local status = require("sidekick.status").get()
+          if status then
+            return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or "Special"
+          end
+        end,
+        cond = function()
+          return require("sidekick.status").get() ~= nil
+        end,
+      },
+    },
+    lualine_x = {
+      {
+        function()
+          local status = require("sidekick.status").cli()
+          return " " .. (#status > 1 and #status or "")
+        end,
+        cond = function()
+          return #require("sidekick.status").cli() > 0
+        end,
+        color = function() return "Special" end,
+      },
+      'encoding', 'fileformat', 'filetype'
+    },
     lualine_y = {'progress'},
     lualine_z = {'location'}
   },
@@ -828,6 +848,43 @@ require('lualine').setup {
   extensions = {}
 }
 EOF
+
+" Sidekick
+lua << EOF
+require("sidekick").setup({
+  cli = {
+    mux = {
+      backend = "tmux",
+      enabled = true,
+    },
+    picker = "telescope", -- you have telescope, not snacks.nvim
+  },
+})
+
+-- Workaround: vim.tbl_filter requires true, but string.find returns a number
+local config = require("sidekick.config")
+config.is_copilot = function(client)
+  local name = type(client) == "table" and client.name or client
+  return name and name:lower():find("copilot") ~= nil
+end
+EOF
+
+" NES: jump to / apply next edit suggestion (<Tab> handled via blink.cmp above)
+nnoremap <silent> <Tab> :lua require('sidekick').nes_jump_or_apply()<CR>
+
+" CLI keymaps
+nnoremap <silent> <leader>aa :lua require("sidekick.cli").toggle()<CR>
+nnoremap <silent> <leader>as :lua require("sidekick.cli").select()<CR>
+nnoremap <silent> <leader>ad :lua require("sidekick.cli").close()<CR>
+nnoremap <silent> <leader>ap :lua require("sidekick.cli").prompt()<CR>
+xnoremap <silent> <leader>ap :lua require("sidekick.cli").prompt()<CR>
+nnoremap <silent> <leader>af :lua require("sidekick.cli").send({ msg = "{file}" })<CR>
+nnoremap <silent> <leader>at :lua require("sidekick.cli").send({ msg = "{this}" })<CR>
+xnoremap <silent> <leader>at :lua require("sidekick.cli").send({ msg = "{this}" })<CR>
+xnoremap <silent> <leader>av :lua require("sidekick.cli").send({ msg = "{selection}" })<CR>
+nnoremap <silent> <leader>ac :lua require("sidekick.cli").toggle({ name = "claude", focus = true })<CR>
+noremap <silent> <C-.> :lua require("sidekick.cli").focus()<CR>
+tnoremap <silent> <C-.> <C-\><C-n>:lua require("sidekick.cli").focus()<CR>
 
 " Gitsigns
 lua << EOF
