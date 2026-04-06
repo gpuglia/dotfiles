@@ -1,49 +1,45 @@
 set nocompatible
+packadd matchit
 
 " vim-tmux-navigator: don't wrap at edges
 let g:tmux_navigator_no_wrap = 1
+" Disable default mappings so Ctrl+\ is free for toggleterm
+let g:tmux_navigator_no_mappings = 1
 
 call plug#begin()
-Plug 'lewis6991/gitsigns.nvim'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'akinsho/toggleterm.nvim', {'tag': '*'}
 Plug 'benmills/vimux'
 Plug 'chrisbra/csv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ecomba/vim-ruby-refactoring'
-" Plug 'elixir-lang/vim-elixir'
-" Plug 'jalvesaq/Nvim-R'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'jgdavey/tslime.vim'
 Plug 'janko-m/vim-test'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
-Plug 'kana/vim-textobj-user'
 Plug 'keith/investigate.vim'
 Plug 'mileszs/ack.vim'
-Plug 'nelstrom/vim-textobj-rubyblock'
-Plug 'nelstrom/vim-markdown-folding'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': 'main', 'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'Raimondi/delimitMate'
 Plug 'RRethy/nvim-treesitter-endwise'
-Plug 'sheerun/vim-polyglot'
-Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
-Plug 'kdheepak/lazygit.nvim'
+Plug 'folke/snacks.nvim'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
-Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'ggandor/leap.nvim'
+Plug 'https://codeberg.org/andyg/leap.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-lualine/lualine.nvim'
 
@@ -67,6 +63,10 @@ Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-tree/nvim-tree.lua'
 
+" Sidekick - symbol outline
+" Sidekick - AI assistant (NES + CLI terminal)
+Plug 'folke/sidekick.nvim'
+
 " Neotest - testing framework
 Plug 'nvim-neotest/nvim-nio'
 Plug 'antoinemadec/FixCursorHold.nvim'
@@ -76,31 +76,16 @@ Plug 'zidhuss/neotest-minitest'
 Plug 'nvim-neotest/neotest-python'
 Plug 'fredrikaverpil/neotest-golang'
 Plug 'jfpedroza/neotest-elixir'
+Plug 'nvim-neotest/neotest-jest'
+Plug 'marilari88/neotest-vitest'
 
-" JS/TS
-" Plug 'pangloss/vim-javascript'
-" Plug 'maxmellon/vim-jsx-pretty'
-" Plug 'HerringtonDarkholme/yats.vim'
-
-" Plug 'YankRing.vim'
-if has('nvim')
-  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  " Plug 'etordera/deoplete-ruby'
-  " Plug 'autozimu/LanguageClient-neovim', {
-  "   \ 'branch': 'next',
-  "   \ 'do': 'bash install.sh',
-  "   \ }
-else
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+" Diagnostics panel
+Plug 'folke/trouble.nvim'
 
 " Colors
 Plug 'rktjmp/lush.nvim'
 Plug 'metalelf0/jellybeans-nvim'
 Plug 'folke/tokyonight.nvim'
-Plug 'rose-pine/neovim'
-Plug 'catppuccin/nvim'
 
 call plug#end()
 
@@ -129,22 +114,6 @@ if has('nvim') || has('termguicolors')
 endif
 
 colorscheme jellybeans-nvim
-" colorscheme rose-pine
-" colorscheme catppuccin-mocha
-
-" lua << EOF
-" local lush = require('lush')
-" local laserwave = require('laserwave')
-
-" local spec = lush.extends({laserwave}).with(function()
-"   return {
-"     Comment { fg = laserwave.Comment.fg, bg = laserwave.Comment.bg, gui = "NONE" },
-"   }
-" end)
-
-" lush(spec)
-" EOF
-
 let g:tokyonight_style = "day"
 
 " Appearance
@@ -232,6 +201,12 @@ nnoremap <Leader>. <c-^>
 " clear search buffer
 nnoremap <silent> // :nohlsearch<CR>
 
+" vim-tmux-navigator keymaps (manual, since we disabled defaults to free Ctrl+\)
+nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
+nnoremap <silent> <C-j> :TmuxNavigateDown<CR>
+nnoremap <silent> <C-k> :TmuxNavigateUp<CR>
+nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
+
 " faster splits
 nnoremap <silent> vv :vsp<CR>
 " nnoremap <silent> ss :sp<CR>
@@ -241,10 +216,15 @@ nnoremap <silent> <Leader>qc :ccl<CR>
 
 " Telescope
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fs <cmd>Telescope lsp_document_symbols<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
 nnoremap <leader>fc <cmd>Telescope commands<cr>
+nnoremap <leader>fc <cmd>Telescope<cr>
+nnoremap <leader>fg <cmd>Telescope git_status<cr>
+
+" Open all git-changed files in the quickfix list
+nnoremap <leader>go :cexpr system('git diff --name-only HEAD') \| copen<CR>
 
 
 
@@ -278,8 +258,10 @@ nnoremap <Leader>gb  :Git blame<CR>
 map <Leader>gh :GBrowse master:%<CR> " GitHub
 map <Leader>gH :GBrowse! master:%<CR> " GitHub
 
-" Lazygit
-nnoremap <Leader>lg :LazyGit<CR>
+" Lazygit (via snacks.nvim – edit opens files in this Neovim instance)
+nnoremap <Leader>lg :lua Snacks.lazygit()<CR>
+nnoremap <Leader>ll :lua Snacks.lazygit.log()<CR>
+nnoremap <Leader>lf :lua Snacks.lazygit.log_file()<CR>
 
 " Neo-tree
 nnoremap <Leader>e :Neotree toggle<CR>
@@ -295,7 +277,7 @@ iabbr pry binding.pry
 nnoremap <leader>s :wa<CR>\|:TestNearest<CR>
 nnoremap <leader>ra :wa<CR>\|:TestFile<CR>
 nnoremap <leader>l :wa<CR>\|:TestLast<CR>
-let test#strategy = "vimux"
+let test#strategy = "toggleterm"
 
 let test#python#runner = 'pytest'
 let test#python#pytest#executable = 'docker-compose exec web py.test'
@@ -366,6 +348,7 @@ let g:splitjoin_ruby_hanging_args=0
 
 " Ack
 nnoremap <Leader>gg :Ack! -g "!spec"<Space>
+nnoremap <Leader>GG :Telescope live_grep<Space>
 " nnoremap <S-k> :Ack! <C-R><C-W><CR>
 nnoremap <S-k> :Ack! <CR>
 
@@ -436,17 +419,60 @@ map <Leader>z :VimuxZoomRunner<CR>
 lua << EOF
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile", "html", "eex", "heex" },
-  auto_install = true,
+})
 
-   highlight = {
-    enable = true,
-    disable = {},
-   },
+-- nvim-treesitter-textobjects: keymaps must be registered manually (new API no longer reads them from setup())
+require('nvim-treesitter-textobjects').setup({
+  select = { lookahead = true },
+  move  = { set_jumps = true },
+})
 
-   indent = {
-     enable = true
-   }
+local ts_select = require('nvim-treesitter-textobjects.select')
+local ts_move   = require('nvim-treesitter-textobjects.move')
+
+-- Select text objects (operator-pending + visual)
+local select_maps = {
+  ["af"] = "@function.outer",
+  ["if"] = "@function.inner",
+  ["ac"] = "@class.outer",
+  ["ic"] = "@class.inner",
+  ["aa"] = "@parameter.outer",
+  ["ia"] = "@parameter.inner",
+  ["ab"] = "@block.outer",
+  ["ib"] = "@block.inner",
 }
+for key, query in pairs(select_maps) do
+  vim.keymap.set({ "x", "o" }, key, function() ts_select.select_textobject(query, "textobjects") end, { desc = "TS select " .. query })
+end
+
+-- Move to next/previous function/class
+vim.keymap.set({ "n", "x", "o" }, "]f", function() ts_move.goto_next_start("@function.outer", "textobjects") end, { desc = "Next function start" })
+vim.keymap.set({ "n", "x", "o" }, "]c", function() ts_move.goto_next_start("@class.outer",    "textobjects") end, { desc = "Next class start" })
+vim.keymap.set({ "n", "x", "o" }, "]F", function() ts_move.goto_next_end("@function.outer",   "textobjects") end, { desc = "Next function end" })
+vim.keymap.set({ "n", "x", "o" }, "]C", function() ts_move.goto_next_end("@class.outer",      "textobjects") end, { desc = "Next class end" })
+vim.keymap.set({ "n", "x", "o" }, "[f", function() ts_move.goto_previous_start("@function.outer", "textobjects") end, { desc = "Prev function start" })
+vim.keymap.set({ "n", "x", "o" }, "[c", function() ts_move.goto_previous_start("@class.outer",    "textobjects") end, { desc = "Prev class start" })
+vim.keymap.set({ "n", "x", "o" }, "[F", function() ts_move.goto_previous_end("@function.outer",   "textobjects") end, { desc = "Prev function end" })
+vim.keymap.set({ "n", "x", "o" }, "[C", function() ts_move.goto_previous_end("@class.outer",      "textobjects") end, { desc = "Prev class end" })
+
+-- Incremental selection (native Neovim treesitter API)
+vim.keymap.set("n", "gnn", function() vim.treesitter.start() end,             { desc = "Start treesitter selection" })
+vim.keymap.set("x", "grn", function() vim.treesitter.node_incremental() end,  { desc = "Expand to parent node" })
+vim.keymap.set("x", "grc", function() vim.treesitter.scope_incremental() end, { desc = "Expand to enclosing scope" })
+vim.keymap.set("x", "grm", function() vim.treesitter.node_decremental() end,  { desc = "Shrink to child node" })
+
+-- Highlighting, indentation, and folding via FileType autocmd (pure lua, no vimscript mixing)
+local ts_filetypes = { "javascript", "typescript", "typescriptreact", "ruby", "python", "go", "elixir", "kotlin", "lua", "vim", "markdown", "sql", "dockerfile" }
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = ts_filetypes,
+  callback = function()
+    vim.treesitter.start()
+    vim.wo[0][0].foldmethod = "expr"
+    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.wo[0][0].foldenable = false
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
 EOF
 
 " Leap
@@ -543,14 +569,7 @@ require("neo-tree").setup({
 })
 EOF
 
-" treesitter-endwise
-lua << EOF
-require('nvim-treesitter.configs').setup {
-    endwise = {
-        enable = true,
-    },
-}
-EOF
+" treesitter-endwise (no config needed, works automatically)
 
 " Save before make
 " autocmd BufWritePost <buffer> make
@@ -627,6 +646,9 @@ require('lspconfig').kotlin_language_server.setup({
   filetypes = { "kotlin" },
   root_dir = require('lspconfig').util.root_pattern("settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"),
 })
+
+-- Copilot LSP (for sidekick.nvim NES)
+vim.lsp.enable("copilot")
 EOF
 
 " Blink completion setup
@@ -638,7 +660,13 @@ require('blink.cmp').setup({
   -- or 'full' for all of the above
   keymap = {
     preset = 'enter',
-    ['<Tab>'] = {}, -- handled by custom keymap below
+    ['<Tab>'] = {
+      'snippet_forward',
+      function() -- sidekick next edit suggestion
+        return require('sidekick').nes_jump_or_apply()
+      end,
+      'fallback',
+    },
     ['<C-l>'] = { 'select_and_accept', 'fallback' }, -- alternative accept for Blink
     ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
     ['<Up>'] = { 'select_prev', 'fallback' },
@@ -677,25 +705,6 @@ require('blink.cmp').setup({
   },
 })
 
--- Tab behavior (Blink + Supermaven):
--- 1) accept Blink selected/first item
--- 2) jump snippet forward
--- 3) insert a literal tab
-local literal_tab = vim.api.nvim_replace_termcodes('<Tab>', true, false, true)
-
-vim.keymap.set('i', '<Tab>', function()
-  if blink.is_menu_visible() then
-    blink.select_and_accept()
-    return
-  end
-
-  if blink.snippet_active({ direction = 1 }) then
-    blink.snippet_forward()
-    return
-  end
-
-  vim.api.nvim_feedkeys(literal_tab, 'i', true)
-end, { silent = true })
 EOF
 
 " Supermaven
@@ -707,9 +716,10 @@ require("supermaven-nvim").setup({
 EOF
 
 " Running files
-autocmd FileType elixir nnoremap <leader>x :w <enter> :!elixir %<cr>
-autocmd FileType ruby   nnoremap <leader>x :w <enter> :!ruby %<cr>
-autocmd FileType go     nnoremap <leader>x :w <enter> :!go run %<cr>
+autocmd FileType elixir nnoremap <leader>x :w<CR>:TermExec cmd="elixir %"<CR>
+autocmd FileType ruby   nnoremap <leader>x :w<CR>:TermExec cmd="ruby %"<CR>
+autocmd FileType go     nnoremap <leader>x :w<CR>:TermExec cmd="go run %"<CR>
+autocmd FileType rust   nnoremap <leader>x :w<CR>:TermExec cmd="cargo run"<CR>
 
 " Neotest configuration
 lua << EOF
@@ -737,6 +747,13 @@ require("neotest").setup({
     }),
     require("neotest-golang"),
     require("neotest-elixir"),
+    require("neotest-jest")({
+      jestCommand = "npx jest",
+      cwd = function()
+        return vim.fn.getcwd()
+      end,
+    }),
+    require("neotest-vitest"),
   },
 })
 EOF
@@ -753,6 +770,21 @@ nnoremap <silent> <leader>ta :echo "Attaching to test"<CR>:lua require("neotest"
 nnoremap <silent> <leader>to :lua require("neotest").output.open({ enter = true })<CR>
 nnoremap <silent> <leader>tO :lua require("neotest").output_panel.toggle()<CR>
 nnoremap <silent> <leader>tt :lua require("neotest").summary.toggle()<CR>
+
+" Toggleterm configuration
+lua << EOF
+require("toggleterm").setup({
+  open_mapping = [[<C-\>]],
+  direction = "float",
+  float_opts = {
+    border = "curved",
+    width = math.floor(vim.o.columns * 0.85),
+    height = math.floor(vim.o.lines * 0.85),
+  },
+  shade_terminals = true,
+  persist_mode = true,
+})
+EOF
 
 " Lualine configuration
 lua << EOF
@@ -778,8 +810,34 @@ require('lualine').setup {
   sections = {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_c = {
+      'filename',
+      {
+        function() return " " end,
+        color = function()
+          local status = require("sidekick.status").get()
+          if status then
+            return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or "Special"
+          end
+        end,
+        cond = function()
+          return require("sidekick.status").get() ~= nil
+        end,
+      },
+    },
+    lualine_x = {
+      {
+        function()
+          local status = require("sidekick.status").cli()
+          return " " .. (#status > 1 and #status or "")
+        end,
+        cond = function()
+          return #require("sidekick.status").cli() > 0
+        end,
+        color = function() return "Special" end,
+      },
+      'encoding', 'fileformat', 'filetype'
+    },
     lualine_y = {'progress'},
     lualine_z = {'location'}
   },
@@ -797,6 +855,43 @@ require('lualine').setup {
   extensions = {}
 }
 EOF
+
+" Sidekick
+lua << EOF
+require("sidekick").setup({
+  cli = {
+    mux = {
+      backend = "tmux",
+      enabled = true,
+    },
+    picker = "telescope", -- you have telescope, not snacks.nvim
+  },
+})
+
+-- Workaround: vim.tbl_filter requires true, but string.find returns a number
+local config = require("sidekick.config")
+config.is_copilot = function(client)
+  local name = type(client) == "table" and client.name or client
+  return name and name:lower():find("copilot") ~= nil
+end
+EOF
+
+" NES: jump to / apply next edit suggestion (<Tab> handled via blink.cmp above)
+nnoremap <silent> <Tab> :lua require('sidekick').nes_jump_or_apply()<CR>
+
+" CLI keymaps
+nnoremap <silent> <leader>aa :lua require("sidekick.cli").toggle()<CR>
+nnoremap <silent> <leader>as :lua require("sidekick.cli").select()<CR>
+nnoremap <silent> <leader>ad :lua require("sidekick.cli").close()<CR>
+nnoremap <silent> <leader>ap :lua require("sidekick.cli").prompt()<CR>
+xnoremap <silent> <leader>ap :lua require("sidekick.cli").prompt()<CR>
+nnoremap <silent> <leader>af :lua require("sidekick.cli").send({ msg = "{file}" })<CR>
+nnoremap <silent> <leader>at :lua require("sidekick.cli").send({ msg = "{this}" })<CR>
+xnoremap <silent> <leader>at :lua require("sidekick.cli").send({ msg = "{this}" })<CR>
+xnoremap <silent> <leader>av :lua require("sidekick.cli").send({ msg = "{selection}" })<CR>
+nnoremap <silent> <leader>ac :lua require("sidekick.cli").toggle({ name = "claude", focus = true })<CR>
+noremap <silent> <C-.> :lua require("sidekick.cli").focus()<CR>
+tnoremap <silent> <C-.> <C-\><C-n>:lua require("sidekick.cli").focus()<CR>
 
 " Gitsigns
 lua << EOF
@@ -847,3 +942,60 @@ require('gitsigns').setup({
   end
 })
 EOF
+
+" Trouble - diagnostics panel
+lua << EOF
+require("trouble").setup()
+EOF
+
+" snacks.nvim (lazygit integration: theme + nvim-remote edit)
+" Only lazygit is enabled – all other snacks modules are explicitly disabled.
+lua << EOF
+require("snacks").setup({
+  lazygit = {
+    configure = true, -- sets nvim-remote edit integration
+    config = {
+      os = { editPreset = "nvim-remote" },
+      gui = {
+        nerdFontsVersion = "3",
+        defaultBgColor = "#141414", -- match jellybeans Normal bg
+      },
+    },
+    -- Theme: maps Neovim highlight groups to lazygit colors
+    -- FloatBorder has no fg in jellybeans, so use Comment for inactive borders
+    theme = {
+      [241]                      = { fg = "Special" },
+      activeBorderColor          = { fg = "Special", bold = true },
+      cherryPickedCommitBgColor  = { fg = "Identifier" },
+      cherryPickedCommitFgColor  = { fg = "Function" },
+      defaultFgColor             = { fg = "Normal" },
+      inactiveBorderColor        = { fg = "Comment" },
+      optionsTextColor           = { fg = "Function" },
+      searchingActiveBorderColor = { fg = "Special", bold = true },
+      selectedLineBgColor        = { bg = "Visual" },
+      unstagedChangesColor       = { fg = "DiagnosticError" },
+    },
+  },
+  bigfile      = { enabled = false },
+  dashboard    = { enabled = false },
+  dim          = { enabled = false },
+  explorer     = { enabled = false },
+  gh           = { enabled = false },
+  indent       = { enabled = true },
+  image        = { enabled = false },
+  input        = { enabled = false },
+  notifier     = { enabled = false },
+  picker       = { enabled = false },
+  quickfile    = { enabled = false },
+  scope        = { enabled = false },
+  scroll       = { enabled = false },
+  statuscolumn = { enabled = false },
+  words        = { enabled = false },
+})
+EOF
+
+nnoremap <silent> <Leader>xx <cmd>Trouble diagnostics toggle<CR>
+nnoremap <silent> <Leader>xb <cmd>Trouble diagnostics toggle filter.buf=0<CR>
+nnoremap <silent> <Leader>xs <cmd>Trouble symbols toggle focus=false<CR>
+nnoremap <silent> <Leader>xl <cmd>Trouble loclist toggle<CR>
+nnoremap <silent> <Leader>xq <cmd>Trouble qflist toggle<CR>
