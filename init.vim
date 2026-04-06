@@ -417,9 +417,8 @@ map <Leader>z :VimuxZoomRunner<CR>
 
 " Treesitter
 lua << EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile", "html", "eex", "heex" },
-})
+-- Install parsers via the new API (main branch dropped nvim-treesitter.configs)
+require('nvim-treesitter').install({ "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile", "html", "eex", "heex" })
 
 -- nvim-treesitter-textobjects: keymaps must be registered manually (new API no longer reads them from setup())
 require('nvim-treesitter-textobjects').setup({
