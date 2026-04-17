@@ -226,7 +226,8 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
 nnoremap <leader>fc <cmd>Telescope commands<cr>
 nnoremap <leader>fc <cmd>Telescope<cr>
-nnoremap <leader>fg <cmd>Telescope git_status<cr>
+" nnoremap <leader>fg <cmd>Telescope git_status<cr>
+nnoremap <Leader>fg <cmd>:Telescope live_grep<cr>
 
 " Open all git-changed files in the quickfix list
 nnoremap <leader>go :cexpr system('git diff --name-only HEAD') \| copen<CR>
@@ -352,8 +353,8 @@ let g:splitjoin_ruby_curly_braces=0
 let g:splitjoin_ruby_hanging_args=0
 
 " Ack
-nnoremap <Leader>gg :Ack! -g "!spec"<Space>
-nnoremap <Leader>GG :Telescope live_grep<Space>
+nnoremap <Leader>GG :Ack! -g "!spec"<Space>
+nnoremap <Leader>gg <cmd>:Telescope live_grep<cr>
 " nnoremap <S-k> :Ack! <C-R><C-W><CR>
 nnoremap <S-k> :Ack! <CR>
 
@@ -618,8 +619,14 @@ end
 
 -- Common on_attach for all servers
 local function on_attach(client, bufnr)
-  -- lsp-zero default keymaps
-  lsp_zero.default_keymaps({buffer = bufnr})
+  local opts = { buffer = bufnr }
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  vim.keymap.set('n', 'H', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
 end
 
 -- Setup Mason-managed servers
@@ -633,6 +640,12 @@ require('mason-lspconfig').setup({
       })
     end,
   }
+})
+
+-- Setup ts_ls separately (installed globally via npm)
+require('lspconfig').ts_ls.setup({
+  capabilities = get_capabilities(),
+  on_attach = on_attach,
 })
 
 -- Setup ruby-lsp separately (installed globally, not via Mason)
