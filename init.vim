@@ -113,7 +113,12 @@ if has('nvim') || has('termguicolors')
   set termguicolors
 endif
 
-colorscheme jellybeans-nvim
+let s:theme_file = expand('~/.config/nvim/theme.vim')
+if filereadable(s:theme_file)
+  execute 'source ' . s:theme_file
+else
+  colorscheme jellybeans-nvim
+endif
 let g:tokyonight_style = "day"
 
 " Appearance
@@ -417,9 +422,8 @@ map <Leader>z :VimuxZoomRunner<CR>
 
 " Treesitter
 lua << EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile", "html", "eex", "heex" },
-})
+-- Install parsers via the new API (main branch dropped nvim-treesitter.configs)
+require('nvim-treesitter').install({ "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile", "html", "eex", "heex" })
 
 -- nvim-treesitter-textobjects: keymaps must be registered manually (new API no longer reads them from setup())
 require('nvim-treesitter-textobjects').setup({
@@ -999,3 +1003,9 @@ nnoremap <silent> <Leader>xb <cmd>Trouble diagnostics toggle filter.buf=0<CR>
 nnoremap <silent> <Leader>xs <cmd>Trouble symbols toggle focus=false<CR>
 nnoremap <silent> <Leader>xl <cmd>Trouble loclist toggle<CR>
 nnoremap <silent> <Leader>xq <cmd>Trouble qflist toggle<CR>
+
+" Local overrides
+let s:local_config = expand('~/.config/nvim/local.vim')
+if filereadable(s:local_config)
+  execute 'source ' . s:local_config
+endif
