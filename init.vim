@@ -423,7 +423,42 @@ map <Leader>z :VimuxZoomRunner<CR>
 " Treesitter
 lua << EOF
 -- Install parsers via the new API (main branch dropped nvim-treesitter.configs)
-require('nvim-treesitter').install({ "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "python", "go", "elixir", "sql", "dockerfile", "html", "eex", "heex" })
+local ts_parsers = { "vim", "javascript", "ruby", "kotlin", "markdown", "typescript", "tsx", "python", "go", "elixir", "sql", "dockerfile", "html", "heex", "lua" }
+require('nvim-treesitter').install(ts_parsers)
+
+local ft_map = {
+  javascript      = "javascript",
+  typescript     = "typescript",
+  tsx            = "typescriptreact",
+  ruby           = "ruby",
+  python         = "python",
+  go             = "go",
+  elixir         = "elixir",
+  kotlin         = "kotlin",
+  lua            = "lua",
+  vim            = "vim",
+  markdown       = "markdown",
+  sql            = "sql",
+  dockerfile     = "dockerfile",
+  html           = "html",
+  heex           = "heex",
+}
+local ts_filetypes = {}
+for _, p in ipairs(ts_parsers) do
+  local ft = ft_map[p] or p
+  ts_filetypes[ft] = true
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function(args)
+    if not ts_filetypes[args.match] then return end
+    vim.treesitter.start()
+    vim.wo[0][0].foldmethod = "expr"
+    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.wo[0][0].foldenable = false
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
 
 -- nvim-treesitter-textobjects: keymaps must be registered manually (new API no longer reads them from setup())
 require('nvim-treesitter-textobjects').setup({
@@ -464,19 +499,6 @@ vim.keymap.set("n", "gnn", function() vim.treesitter.start() end,             { 
 vim.keymap.set("x", "grn", function() vim.treesitter.node_incremental() end,  { desc = "Expand to parent node" })
 vim.keymap.set("x", "grc", function() vim.treesitter.scope_incremental() end, { desc = "Expand to enclosing scope" })
 vim.keymap.set("x", "grm", function() vim.treesitter.node_decremental() end,  { desc = "Shrink to child node" })
-
--- Highlighting, indentation, and folding via FileType autocmd (pure lua, no vimscript mixing)
-local ts_filetypes = { "javascript", "typescript", "typescriptreact", "ruby", "python", "go", "elixir", "kotlin", "lua", "vim", "markdown", "sql", "dockerfile" }
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = ts_filetypes,
-  callback = function()
-    vim.treesitter.start()
-    vim.wo[0][0].foldmethod = "expr"
-    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    vim.wo[0][0].foldenable = false
-    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-  end,
-})
 EOF
 
 " Leap
