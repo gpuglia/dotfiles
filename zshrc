@@ -16,7 +16,7 @@ fi
 # asdf
 # . /opt/homebrew/opt/asdf/libexec/asdf.sh
 
-. "$HOME/.asdf/asdf.sh"
+# . "$HOME/.asdf/asdf.sh"
 
 if type brew &>/dev/null
 then
@@ -218,9 +218,6 @@ gwt() {
 # Agents
 alias oc="opencode"
 alias cx="claude"
-
-# try init
-eval "$(try init ~/code/tries)"
 
 # Elixir history
 export ERL_AFLAGS="-kernel shell_history enabled"
