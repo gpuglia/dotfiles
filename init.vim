@@ -695,6 +695,15 @@ lua <<EOF
 local blink = require('blink.cmp')
 
 require('blink.cmp').setup({
+  enabled = function()
+    -- Disable completion in floating windows (e.g. snacks scratch) to avoid
+    -- blink.cmp E966 screenpos errors in small floating buffers
+    local win = vim.api.nvim_get_current_win()
+    local config = vim.api.nvim_win_get_config(win)
+    if config.relative ~= "" then return false end
+    return true
+  end,
+
   -- 'default' for control-y, 'super-tab' for tab, 'enter' for enter
   -- or 'full' for all of the above
   keymap = {
@@ -1016,6 +1025,7 @@ require("snacks").setup({
     },
   },
   bigfile      = { enabled = false },
+  scratch      = { enabled = false },
   dashboard    = { enabled = false },
   dim          = { enabled = false },
   explorer     = { enabled = false },
@@ -1032,6 +1042,9 @@ require("snacks").setup({
   words        = { enabled = false },
 })
 EOF
+
+nnoremap <silent> <Leader>ns :lua Snacks.scratch()<CR>
+nnoremap <silent> <Leader>nS :lua Snacks.scratch.select()<CR>
 
 nnoremap <silent> <Leader>xx <cmd>Trouble diagnostics toggle<CR>
 nnoremap <silent> <Leader>xb <cmd>Trouble diagnostics toggle filter.buf=0<CR>
