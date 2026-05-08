@@ -29,7 +29,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'folke/snacks.nvim'
+Plug 'kdheepak/lazygit.nvim'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
@@ -42,6 +42,7 @@ Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v3.x' }
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-lualine/lualine.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 " Language server management
 Plug 'williamboman/mason.nvim'
@@ -264,10 +265,10 @@ nnoremap <Leader>gb  :Git blame<CR>
 map <Leader>gh :GBrowse master:%<CR> " GitHub
 map <Leader>gH :GBrowse! master:%<CR> " GitHub
 
-" Lazygit (via snacks.nvim – edit opens files in this Neovim instance)
-nnoremap <Leader>lg :lua Snacks.lazygit()<CR>
-nnoremap <Leader>ll :lua Snacks.lazygit.log()<CR>
-nnoremap <Leader>lf :lua Snacks.lazygit.log_file()<CR>
+" Lazygit
+nnoremap <Leader>lg :LazyGit<CR>
+nnoremap <Leader>ll :LazyGitFilter<CR>
+nnoremap <Leader>lf :LazyGitFilterCurrentFile<CR>
 
 " Neo-tree
 nnoremap <Leader>e :Neotree toggle<CR>
@@ -696,7 +697,7 @@ local blink = require('blink.cmp')
 
 require('blink.cmp').setup({
   enabled = function()
-    -- Disable completion in floating windows (e.g. snacks scratch) to avoid
+    -- Disable completion in floating windows to avoid
     -- blink.cmp E966 screenpos errors in small floating buffers
     local win = vim.api.nvim_get_current_win()
     local config = vim.api.nvim_win_get_config(win)
@@ -831,6 +832,14 @@ require("toggleterm").setup({
   },
   shade_terminals = true,
   persist_mode = true,
+})
+EOF
+
+" Lualine configuration
+lua << EOF
+require('ibl').setup({
+  indent = { char = '│' },
+  scope  = { enabled = false }, -- scope highlighting is expensive; disable if not needed
 })
 EOF
 
@@ -996,55 +1005,10 @@ lua << EOF
 require("trouble").setup()
 EOF
 
-" snacks.nvim (lazygit integration: theme + nvim-remote edit)
-" Only lazygit is enabled – all other snacks modules are explicitly disabled.
-lua << EOF
-require("snacks").setup({
-  lazygit = {
-    configure = true, -- sets nvim-remote edit integration
-    config = {
-      os = { editPreset = "nvim-remote" },
-      gui = {
-        nerdFontsVersion = "3",
-        defaultBgColor = "#141414", -- match jellybeans Normal bg
-      },
-    },
-    -- Theme: maps Neovim highlight groups to lazygit colors
-    -- FloatBorder has no fg in jellybeans, so use Comment for inactive borders
-    theme = {
-      [241]                      = { fg = "Special" },
-      activeBorderColor          = { fg = "Special", bold = true },
-      cherryPickedCommitBgColor  = { fg = "Identifier" },
-      cherryPickedCommitFgColor  = { fg = "Function" },
-      defaultFgColor             = { fg = "Normal" },
-      inactiveBorderColor        = { fg = "Comment" },
-      optionsTextColor           = { fg = "Function" },
-      searchingActiveBorderColor = { fg = "Special", bold = true },
-      selectedLineBgColor        = { bg = "Visual" },
-      unstagedChangesColor       = { fg = "DiagnosticError" },
-    },
-  },
-  bigfile      = { enabled = false },
-  scratch      = { enabled = false },
-  dashboard    = { enabled = false },
-  dim          = { enabled = false },
-  explorer     = { enabled = false },
-  gh           = { enabled = false },
-  indent       = { enabled = true },
-  image        = { enabled = false },
-  input        = { enabled = false },
-  notifier     = { enabled = false },
-  picker       = { enabled = false },
-  quickfile    = { enabled = false },
-  scope        = { enabled = false },
-  scroll       = { enabled = false },
-  statuscolumn = { enabled = false },
-  words        = { enabled = false },
-})
-EOF
-
-nnoremap <silent> <Leader>ns :lua Snacks.scratch()<CR>
-nnoremap <silent> <Leader>nS :lua Snacks.scratch.select()<CR>
+" lazygit.nvim – use dotfiles-managed config for jellybeans theme
+let g:lazygit_use_neovim_remote = 1
+let g:lazygit_use_custom_config_file_path = 1
+let g:lazygit_config_file_path = expand('~/.config/lazygit/config.yml')
 
 nnoremap <silent> <Leader>xx <cmd>Trouble diagnostics toggle<CR>
 nnoremap <silent> <Leader>xb <cmd>Trouble diagnostics toggle filter.buf=0<CR>

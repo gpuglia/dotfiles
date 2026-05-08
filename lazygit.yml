@@ -1,0 +1,27 @@
+os:
+  editPreset: nvim-remote
+
+gui:
+  nerdFontsVersion: "3"
+  theme:
+    # 241 = the "dimmed" color lazygit uses for various muted elements
+    activeBorderColor:
+      - '#8bc1aa'
+      - bold
+    inactiveBorderColor:
+      - '#888888'
+    searchingActiveBorderColor:
+      - '#8bc1aa'
+      - bold
+    optionsTextColor:
+      - '#fad07a'
+    selectedLineBgColor:
+      - '#404040'
+    cherryPickedCommitBgColor:
+      - '#c6b6ee'
+    cherryPickedCommitFgColor:
+      - '#fad07a'
+    unstagedChangesColor:
+      - '#d64343'
+    defaultFgColor:
+      - '#e8e8d3'
