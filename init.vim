@@ -1006,7 +1006,12 @@ require("trouble").setup()
 EOF
 
 " lazygit.nvim – use dotfiles-managed config for jellybeans theme
-let g:lazygit_use_neovim_remote = 1
+" Disable nvr-based $GIT_EDITOR: nvr isn't installed, and when it was enabled
+" it caused lazygit's commit/reword editor to hang waiting for a remote that
+" never returned. File opening (e/o) still reuses the current nvim via the
+" editPreset: nvim-remote setting in ~/.config/lazygit/config.yml, which uses
+" plain `nvim --server` instead of nvr.
+let g:lazygit_use_neovim_remote = 0
 let g:lazygit_use_custom_config_file_path = 1
 let g:lazygit_config_file_path = expand('~/.config/lazygit/config.yml')
 
