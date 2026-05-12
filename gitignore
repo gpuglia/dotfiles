@@ -68,3 +68,6 @@ logseq/.recycle
 # vim
 .config/nvim/theme.vim
 .config/nvim/local.vim
+
+# playwright-cli
+.playwright-cli/
