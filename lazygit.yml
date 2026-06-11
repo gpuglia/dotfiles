@@ -1,6 +1,7 @@
 os:
   editPreset: nvim-remote
-
+  edit: '[ -z "$NVIM" ] && (nvim -- {{filename}}) || (nvim --server "$NVIM" --remote-send "<cmd>q<CR><cmd>edit {{filename}}<CR>")'
+  editAtLine: '[ -z "$NVIM" ] && (nvim +{{line}} -- {{filename}}) || (nvim --server "$NVIM" --remote-send "<cmd>q<CR><cmd>edit +{{line}} {{filename}}<CR>")'
 gui:
   nerdFontsVersion: "3"
   theme:
@@ -25,3 +26,6 @@ gui:
       - '#d64343'
     defaultFgColor:
       - '#e8e8d3'
+git:
+  pagers:
+    - externalDiffCommand: difft --color=always
