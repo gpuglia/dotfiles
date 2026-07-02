@@ -213,6 +213,18 @@ nnoremap <silent> <C-j> :TmuxNavigateDown<CR>
 nnoremap <silent> <C-k> :TmuxNavigateUp<CR>
 nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
 
+" Terminal-mode navigation (except in lazygit)
+tnoremap <silent> <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
+tnoremap <silent> <C-j> <C-\><C-n>:TmuxNavigateDown<CR>
+tnoremap <silent> <C-k> <C-\><C-n>:TmuxNavigateUp<CR>
+tnoremap <silent> <C-l> <C-\><C-n>:TmuxNavigateRight<CR>
+
+" Preserve ctrl+hjkl shortcuts in lazygit
+autocmd FileType lazygit tnoremap <buffer> <C-h> <C-h>
+autocmd FileType lazygit tnoremap <buffer> <C-j> <C-j>
+autocmd FileType lazygit tnoremap <buffer> <C-k> <C-k>
+autocmd FileType lazygit tnoremap <buffer> <C-l> <C-l>
+
 " faster splits
 nnoremap <silent> vv :vsp<CR>
 " nnoremap <silent> ss :sp<CR>
@@ -686,9 +698,6 @@ require('lspconfig').kotlin_language_server.setup({
   filetypes = { "kotlin" },
   root_dir = require('lspconfig').util.root_pattern("settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"),
 })
-
--- Copilot LSP (for sidekick.nvim NES)
-vim.lsp.enable("copilot")
 EOF
 
 " Blink completion setup
