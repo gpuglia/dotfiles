@@ -138,6 +138,7 @@ alias gpm='g peek'
 alias gpb='g peek -'
 alias gwl='git worktree list'
 alias gwrm='git worktree remove'
+alias lg='lazygit'
 
 # Ruby
 alias c='rails c'
@@ -218,12 +219,28 @@ gwt() {
 # Agents
 alias oc="opencode"
 alias cx="claude"
+alias pic="cd ~/.pi/agent"
+alias oci="vi ~/.config/opencode/opencode.json"
 
 # Elixir history
 export ERL_AFLAGS="-kernel shell_history enabled"
+
+# History dedup: keep distinct commands, only skip back-to-back exact dupes.
+# Prezto's default HIST_IGNORE_ALL_DUPS + HIST_FIND_NO_DUPS makes ↑ skip
+# whole runs of commands that normalize to the same string (whitespace,
+# line continuations), which feels like "missing history".
+unsetopt HIST_IGNORE_ALL_DUPS
+unsetopt HIST_FIND_NO_DUPS
+setopt   HIST_IGNORE_DUPS
 
 # Source local config
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.local"
 fi
 export PATH="$HOME/.local/bin:$PATH"
+
+# ascli completion
+[ -f "/Users/gustavopuglia/.ascli-completion.zsh" ] && . "/Users/gustavopuglia/.ascli-completion.zsh"
+
+# zoxide
+eval "$(zoxide init zsh)"
