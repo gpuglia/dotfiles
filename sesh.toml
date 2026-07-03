@@ -1,0 +1,26 @@
+[default_session]
+startup_command = "nvim ."
+
+blacklist = [".git", "node_modules", ".Trash"]
+
+[icons]
+default = "  "
+current_session = "  "
+
+[[session]]
+name = "dotfiles"
+path = "~/code/dotfiles"
+startup_command = "nvim ."
+
+[[session]]
+name = "scratch"
+path = "~"
+startup_command = "clear"
+
+[[session]]
+name = "config"
+path = "~/.config"
+
+[[session]]
+name = "pi"
+path = "~/.pi/agent"
