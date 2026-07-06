@@ -44,8 +44,7 @@ export GIT_EDITOR=nvim
 export BUNDLER_EDITOR=nvim
 
 
-# Prompt
-prompt pure
+# Prompt (starship, see starship.toml)
 
 # Customize to your needs...
 # source ~/.bin/tmuxinator.zsh
@@ -245,4 +244,8 @@ export PATH="$HOME/.local/bin:$PATH"
 # zoxide
 eval "$(zoxide init zsh)"
 
+# worktrunk
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# starship
+eval "$(starship init zsh)"
