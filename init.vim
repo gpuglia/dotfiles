@@ -60,10 +60,6 @@ Plug 'supermaven-inc/supermaven-nvim'
 
 Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 
-" Tree navigation
-Plug 'nvim-tree/nvim-web-devicons'
-Plug 'nvim-tree/nvim-tree.lua'
-
 " Sidekick - symbol outline
 " Sidekick - AI assistant (NES + CLI terminal)
 Plug 'folke/sidekick.nvim'
@@ -578,15 +574,6 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 "   cmd = { "typescript-language-server", "--stdio" }
 " }
 " EOF
-
-" nvim-tree
-lua << EOF
-require("nvim-tree").setup {
-  view = {
-    width = 40,
-  },
-}
-EOF
 
 " neo-tree
 lua << EOF
