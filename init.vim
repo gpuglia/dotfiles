@@ -52,8 +52,8 @@ Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 
 " Autocompletion
-Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'cargo build --release' }
-Plug 'saghen/blink.compat', { 'tag': '2.*' }
+Plug 'Saghen/blink.cmp', { 'tag': 'v0.*', 'do': 'true' }
+Plug 'saghen/blink.compat', { 'tag': '*' }
 
 " AI autocomplete
 Plug 'supermaven-inc/supermaven-nvim'
@@ -229,14 +229,13 @@ nnoremap <silent> <Leader>qc :ccl<CR>
 
 
 " Telescope
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fs <cmd>Telescope lsp_document_symbols<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>f <cmd>Telescope find_files<cr>
+" nnoremap <leader>fs <cmd>Telescope lsp_document_symbols<cr>
+" nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
-nnoremap <leader>fc <cmd>Telescope commands<cr>
-nnoremap <leader>fc <cmd>Telescope<cr>
+" nnoremap <leader>fc <cmd>Telescope commands<cr>
+" nnoremap <leader>fc <cmd>Telescope<cr>
 " nnoremap <leader>fg <cmd>Telescope git_status<cr>
-nnoremap <Leader>fg <cmd>:Telescope live_grep<cr>
 
 " Open all git-changed files in the quickfix list
 nnoremap <leader>go :cexpr system('git diff --name-only HEAD') \| copen<CR>
@@ -256,7 +255,7 @@ map <Leader>jd :CtrlP db<CR>
 
 " Ctags
 map <Leader>ct :!ctags -R .<CR>
-nnoremap <silent> ,f <C-]> " jump to tag
+" nnoremap <silent> ,f <C-]> " jump to tag
 nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr> " jump to tag in vetical split
 
 " Tabs
