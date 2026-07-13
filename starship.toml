@@ -9,7 +9,6 @@ $ruby\
 $python\
 $git_branch\
 $git_status\
-${custom.pr}\
 $line_break\
 $character"""
 
@@ -46,12 +45,3 @@ format = '([\[$all_status$ahead_behind\]]($style) )'
 [character]
 success_symbol = '[❯](bold green)'
 error_symbol = '[❯](bold red_bright)'
-
-[custom.pr]
-command = '''bkt --ttl=45s --stale=15s --scope="$(git rev-parse --show-toplevel 2>/dev/null)/$(git branch --show-current 2>/dev/null)" -- /Users/gustavopuglia/code/dotfiles/starship-pr-status.sh'''
-when = 'git rev-parse --is-inside-work-tree 2>/dev/null'
-format = '[$output]($style) '
-style = 'bold'
-shell = ['bash', '--noprofile', '--norc']
-ignore_timeout = true
-description = 'GitHub PR number + CI status link'
