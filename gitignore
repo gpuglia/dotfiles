@@ -72,3 +72,8 @@ logseq/.recycle
 # playwright-cli
 .playwright-cli/
 .pi-subagents
+
+.worktrees
+
+# Pyright
+pyrightconfig.json
