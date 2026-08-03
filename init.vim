@@ -81,7 +81,10 @@ Plug 'folke/trouble.nvim'
 " Colors
 Plug 'rktjmp/lush.nvim'
 Plug 'metalelf0/jellybeans-nvim'
+Plug 'wtfox/jellybeans.nvim'
 Plug 'folke/tokyonight.nvim'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'rebelot/kanagawa.nvim'
 
 call plug#end()
 
@@ -113,7 +116,7 @@ let s:theme_file = expand('~/.config/nvim/theme.vim')
 if filereadable(s:theme_file)
   execute 'source ' . s:theme_file
 else
-  colorscheme jellybeans-nvim
+  colorscheme jellybeans
 endif
 let g:tokyonight_style = "day"
 
