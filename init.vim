@@ -58,7 +58,6 @@ Plug 'saghen/blink.compat', { 'tag': '*' }
 " AI autocomplete
 Plug 'supermaven-inc/supermaven-nvim'
 
-Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 
 " Sidekick - symbol outline
 " Sidekick - AI assistant (NES + CLI terminal)
@@ -629,8 +628,6 @@ vim.deprecate = function(...)
   deprecate(...)
 end
 
-local lsp_zero = require('lsp-zero')
-
 -- Common capabilities for all servers
 local function get_capabilities()
   local caps = vim.lsp.protocol.make_client_capabilities()
@@ -638,17 +635,20 @@ local function get_capabilities()
   return caps
 end
 
--- Common on_attach for all servers
-local function on_attach(client, bufnr)
-  local opts = { buffer = bufnr }
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  vim.keymap.set('n', 'H', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-end
+-- LSP keymaps: bind on attach via autocmd (fires reliably regardless of how
+-- the client was started). Do not pass on_attach through lspconfig.setup{}.
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local opts = { buffer = args.buf }
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'H', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+  end,
+})
 
 -- Setup Mason-managed servers
 require('mason').setup({})
@@ -657,7 +657,6 @@ require('mason-lspconfig').setup({
     function(server_name)
       require('lspconfig')[server_name].setup({
         capabilities = get_capabilities(),
-        on_attach = on_attach,
       })
     end,
   }
@@ -666,21 +665,18 @@ require('mason-lspconfig').setup({
 -- Setup ts_ls separately (installed globally via npm)
 require('lspconfig').ts_ls.setup({
   capabilities = get_capabilities(),
-  on_attach = on_attach,
 })
 
 -- Setup ruby-lsp separately (installed globally, not via Mason)
 require('lspconfig').ruby_lsp.setup({
   cmd = { "ruby-lsp" },
   capabilities = get_capabilities(),
-  on_attach = on_attach,
 })
 
 -- Setup kotlin-language-server separately (installed via Homebrew)
 require('lspconfig').kotlin_language_server.setup({
   cmd = { "/opt/homebrew/bin/kotlin-lsp" },
   capabilities = get_capabilities(),
-  on_attach = on_attach,
   filetypes = { "kotlin" },
   root_dir = require('lspconfig').util.root_pattern("settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"),
 })
