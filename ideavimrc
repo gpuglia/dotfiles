@@ -1,0 +1,49 @@
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+
+# Use system clipboard
+set clipboard+=unnamed
+set clipboard+=ideaput
+
+# Smartcase search
+:set ignorecase smartcase
+
+# Leader key
+let mapleader=","
+
+# Moving between splits
+map <C-H> <C-W>h
+map <C-J> <C-W>j
+map <C-L> <C-W>l
+map <C-K> <C-W>k
+
+# Project Navigation
+nnoremap <leader>t :action GotoFile<CR>
+nnoremap <leader>b :action RecentFiles<CR>
+nnoremap <leader>gh :action Github.Open.In.Browser<CR>
+nnoremap <leader>rc :source ~/.ideavimrc<CR>
+nnoremap <leader>. :edit #<CR>
+
+nnoremap <S-K> :action FindUsages<CR>
+nnoremap gt :action GotoTest<CR>
+" nnoremap gb :action Back<CR>
+nnoremap gf :action Forward<CR>
+
+nnoremap [[ :action MethodUp<CR>
+nnoremap ]] :action MethodDown<CR>
+nnoremap <leader>gb :action Annotate<CR>
+
+# Distraction-free mode
+nnoremap <c-z> :action ToggleDistractionFreeMode<CR>
+
+# Running and debugging
+nnoremap <leader>s :action ContextRun<CR>
+nnoremap <leader>x :action ContextRun<CR>
+nnoremap <leader>d :action ContextDebug<CR>
+nnoremap <leader>a :action RunClass<CR>
+nnoremap <leader>l :action Rerun<CR>
+nnoremap <leader>f :action RerunFailedTests<CR>
+nnoremap <leader>p :action ToggleLineBreakpoint<CR>
+nnoremap <leader>n :action ActivateDebugToolWindow<CR>
+nnoremap go :action MoveEditorToOppositeTabGroup<CR>
+nnoremap gs :action SelectIn<CR>

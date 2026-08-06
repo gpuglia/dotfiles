@@ -141,6 +141,15 @@
 	name = Gustavo Puglia
 	email = gustavo.puglia@alphasights.com
 
+# difftastic
+[diff]
+    tool = difftastic
+[difftool]
+    prompt = false
+[difftool "difftastic"]
+    cmd = difft "$LOCAL" "$REMOTE"
+[alias]
+    dft = difftool
 
 [hub]
 protocol = https

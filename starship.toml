@@ -1,5 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+palette = 'kanagawa-dragon'
+
 format = """
 $directory\
 $nodejs\
@@ -9,6 +11,21 @@ $git_branch\
 $git_status\
 $line_break\
 $character"""
+
+[palettes.kanagawa-dragon]
+fg           = '#c5c9c5' # dragonWhite
+bg           = '#181616' # dragonBlack3
+grey         = '#a6a69c' # dragonGray
+grey_dark    = '#282727' # dragonBlack4
+gravel       = '#393836' # dragonBlack5
+red          = '#c4746e' # dragonRed
+red_bright   = '#e46876' # waveRed
+blue         = '#8ba4b0' # dragonBlue2
+blue_light   = '#8ea4a2' # dragonAqua
+purple       = '#a292a3' # dragonPink
+yellow       = '#c4b28a' # dragonYellow
+green        = '#8a9a7b' # dragonGreen2
+green_bright = '#87a987' # dragonGreen
 
 [directory]
 style = 'bold cyan'

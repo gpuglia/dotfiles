@@ -74,6 +74,7 @@ logseq/.recycle
 .pi-subagents
 
 .worktrees
+.worktreeinclude
 
 # Pyright
 pyrightconfig.json
