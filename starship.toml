@@ -1,7 +1,5 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-palette = 'jellybeans'
-
 format = """
 $directory\
 $nodejs\
@@ -12,23 +10,8 @@ $git_status\
 $line_break\
 $character"""
 
-[palettes.jellybeans]
-fg           = '#e8e8d3'
-bg           = '#151515'
-grey         = '#888888'
-grey_dark    = '#333333'
-gravel       = '#403c41'
-red          = '#cf6a4c'
-red_bright   = '#d64343'
-blue         = '#8fbfdc'
-blue_light   = '#8197bf'
-purple       = '#c6b6ee'
-yellow       = '#fad07a'
-green        = '#8bc1aa'
-green_bright = '#99ad6a'
-
 [directory]
-style = 'bold blue_light'
+style = 'bold cyan'
 format = '[$path]($style) '
 truncation_length = 3
 truncate_to_repo = true
@@ -39,9 +22,9 @@ symbol = ' '
 format = 'on [$symbol$branch]($style) '
 
 [git_status]
-style = 'bold red_bright'
+style = 'bold red'
 format = '([\[$all_status$ahead_behind\]]($style) )'
 
 [character]
 success_symbol = '[❯](bold green)'
-error_symbol = '[❯](bold red_bright)'
+error_symbol = '[❯](bold red)'

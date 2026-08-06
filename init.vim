@@ -83,6 +83,7 @@ Plug 'folke/trouble.nvim'
 Plug 'rktjmp/lush.nvim'
 Plug 'metalelf0/jellybeans-nvim'
 Plug 'folke/tokyonight.nvim'
+Plug 'rebelot/kanagawa.nvim'
 
 call plug#end()
 
