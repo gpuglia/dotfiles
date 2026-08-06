@@ -1,22 +1,5 @@
-#
-# Executes commands at the start of an interactive session.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
-
-# Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
-
 # Load cargo
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
-
-# asdf
-# . /opt/homebrew/opt/asdf/libexec/asdf.sh
-
-# . "$HOME/.asdf/asdf.sh"
 
 if type brew &>/dev/null
 then
@@ -26,28 +9,8 @@ then
   compinit
 fi
 
-# FFI
-# export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
-# export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
-# export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
-
-# export LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix readline)/lib -L$(brew --prefix zlib)/lib"
-# export CPPFLAGS="-I$(brew --prefix openssl)/include -I$(brew --prefix readline)/include -I$(brew --prefix zlib)/include"
-# export PKG_CONFIG_PATH="$(brew --prefix openssl)/lib/pkgconfig:$(brew --prefix readline)/lib/pkgconfig:$(brew --prefix zlib)/lib/pkgconfig"
-
 # Prevent errors in rails c
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
-
-export VISUAL=nvim
-export EDITOR=nvim
-export GIT_EDITOR=nvim
-export BUNDLER_EDITOR=nvim
-
-
-# Prompt (starship, see starship.toml)
-
-# Customize to your needs...
-# source ~/.bin/tmuxinator.zsh
 
 # PS
 alias psa="ps aux"
@@ -172,6 +135,8 @@ alias bst='brew services stop'
 
 # VIM mode
 set -o vi
+bindkey -M viins '^?' backward-delete-char
+bindkey -M viins '^H' backward-delete-char
 
 # Docker Compose
 alias dc='docker-compose'
@@ -185,35 +150,13 @@ alias dcps='docker-compose ps'
 alias gr='./gradlew bootRun'
 alias gb='./gradlew -x build'
 
-export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
-export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
-export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
-export PATH=~/.mix/escripts:$PATH
-
-# Git worktrees
-gwt() {
-  local branch="$1"
-  if [ -z "$branch" ]; then
-    echo "Usage: gwt <branch-name>"
-    return 1
-  fi
-  local project_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
-  if [ -z "$project_name" ]; then
-    echo "Error: Not in a git repository"
-    return 1
-  fi
-  local worktree_path="$HOME/code/worktrees/$project_name/$branch"
-
-  mkdir -p "$(dirname "$worktree_path")"
-
-  if git worktree add "$worktree_path" -b "gus/$branch"; then
-    if [ -n "$TMUX" ]; then
-      tmux new-window -n "$branch" -c "$worktree_path"
-    else
-      cd "$worktree_path"
-    fi
-  fi
-}
+path=(
+  /opt/homebrew/opt/postgresql@16/bin(N)
+  /opt/homebrew/opt/postgresql@15/bin(N)
+  /opt/homebrew/opt/postgresql@13/bin(N)
+  "$HOME/.mix/escripts"
+  $path
+)
 
 # Agents
 alias oc="opencode"
@@ -232,20 +175,17 @@ unsetopt HIST_IGNORE_ALL_DUPS
 unsetopt HIST_FIND_NO_DUPS
 setopt   HIST_IGNORE_DUPS
 
+# tools
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
+eval "$(mise activate zsh)"
+eval "$(atuin init zsh)"
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source "${XDG_DATA_HOME}/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+
 # Source local config
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.local"
 fi
-export PATH="$HOME/.local/bin:$PATH"
-
-# ascli completion
-[ -f "/Users/gustavopuglia/.ascli-completion.zsh" ] && . "/Users/gustavopuglia/.ascli-completion.zsh"
-
-# zoxide
-eval "$(zoxide init zsh)"
-
-# worktrunk
-if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
-
-# starship
-eval "$(starship init zsh)"
