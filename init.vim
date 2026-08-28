@@ -280,6 +280,9 @@ nnoremap <Leader>lf :LazyGitFilterCurrentFile<CR>
 
 " Neo-tree
 nnoremap <Leader>e :Neotree toggle<CR>
+" Alias for <Leader>e: typing 'et' otherwise fires <Leader>e and leaks 't'
+" (open_tabnew) into the freshly opened tree before its state.tree exists.
+nnoremap <Leader>et :Neotree toggle<CR>
 nnoremap <Leader>ef :Neotree reveal<CR>
 nnoremap <Leader>eb :Neotree toggle show buffers<CR>
 nnoremap <Leader>eg :Neotree toggle show git_status<CR>
