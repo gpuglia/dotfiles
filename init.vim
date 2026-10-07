@@ -204,17 +204,19 @@ nnoremap <Leader>. <c-^>
 " clear search buffer
 nnoremap <silent> // :nohlsearch<CR>
 
-" vim-tmux-navigator keymaps (manual, since we disabled defaults to free Ctrl+\)
-nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
-nnoremap <silent> <C-j> :TmuxNavigateDown<CR>
-nnoremap <silent> <C-k> :TmuxNavigateUp<CR>
-nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
+" Navigation via herdr-navigator (plugin/herdr-navigator.vim): moves nvim
+" splits, crosses into the neighbouring herdr pane at a split edge; inside
+" tmux it defers to vim-tmux-navigator.
+nnoremap <silent> <C-h> :HerdrNavigateLeft<CR>
+nnoremap <silent> <C-j> :HerdrNavigateDown<CR>
+nnoremap <silent> <C-k> :HerdrNavigateUp<CR>
+nnoremap <silent> <C-l> :HerdrNavigateRight<CR>
 
 " Terminal-mode navigation (except in lazygit)
-tnoremap <silent> <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
-tnoremap <silent> <C-j> <C-\><C-n>:TmuxNavigateDown<CR>
-tnoremap <silent> <C-k> <C-\><C-n>:TmuxNavigateUp<CR>
-tnoremap <silent> <C-l> <C-\><C-n>:TmuxNavigateRight<CR>
+tnoremap <silent> <C-h> <C-\><C-n>:HerdrNavigateLeft<CR>
+tnoremap <silent> <C-j> <C-\><C-n>:HerdrNavigateDown<CR>
+tnoremap <silent> <C-k> <C-\><C-n>:HerdrNavigateUp<CR>
+tnoremap <silent> <C-l> <C-\><C-n>:HerdrNavigateRight<CR>
 
 " Preserve ctrl+hjkl shortcuts in lazygit
 autocmd FileType lazygit tnoremap <buffer> <C-h> <C-h>
@@ -680,7 +682,7 @@ require('lspconfig').ruby_lsp.setup({
 
 -- Setup kotlin-language-server separately (installed via Homebrew)
 require('lspconfig').kotlin_language_server.setup({
-  cmd = { "/opt/homebrew/bin/kotlin-lsp" },
+  cmd = { "/opt/homebrew/bin/kotlin-lsp", "--stdio" },
   capabilities = get_capabilities(),
   filetypes = { "kotlin" },
   root_dir = require('lspconfig').util.root_pattern("settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"),
