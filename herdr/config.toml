@@ -1,0 +1,145 @@
+onboarding = false
+
+# kanagawa-dragon palette (from kanagawa.nvim dragon theme)
+[theme]
+name = "kanagawa"
+
+[theme.custom]
+text = "#c5c9c5"
+subtext0 = "#a6a69c"
+accent = "#8ba4b0"
+panel_bg = "#1D1C19"
+sidebar_bg = "#181616"
+active_row_bg = "#282727"
+selection_bg = "#223249"
+surface0 = "#181616"
+surface1 = "#282727"
+surface_dim = "#1D1C19"
+overlay0 = "#393836"
+overlay1 = "#625e5a"
+mauve = "#8992a7"
+green = "#87a987"
+yellow = "#c4b28a"
+red = "#c4746e"
+blue = "#8ba4b0"
+teal = "#8ea4a2"
+peach = "#b6927b"
+
+[keys]
+prefix = "ctrl+a"
+switch_workspace = "prefix+shift+1..9"
+
+# vim-tmux-navigator-style pane movement: ctrl+hjkl moves herdr focus directly;
+# when the focused pane runs vim/nvim (or fzf), navigate.sh forwards the chord
+# into it so the editor moves its own splits and crosses back out at edges.
+[[keys.command]]
+key = "ctrl+h"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh left"
+description = "navigate left (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh down"
+description = "navigate down (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh up"
+description = "navigate up (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh right"
+description = "navigate right (nvim/herdr)"
+
+# prefix+alt+1..9 focuses the 1st..9th agent in `herdr agent list` order.
+[[keys.command]]
+key = "prefix+alt+1"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 1"
+description = "focus agent 1"
+
+[[keys.command]]
+key = "prefix+alt+2"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 2"
+description = "focus agent 2"
+
+[[keys.command]]
+key = "prefix+alt+3"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 3"
+description = "focus agent 3"
+
+[[keys.command]]
+key = "prefix+alt+4"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 4"
+description = "focus agent 4"
+
+[[keys.command]]
+key = "prefix+alt+5"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 5"
+description = "focus agent 5"
+
+[[keys.command]]
+key = "prefix+alt+6"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 6"
+description = "focus agent 6"
+
+[[keys.command]]
+key = "prefix+alt+7"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 7"
+description = "focus agent 7"
+
+[[keys.command]]
+key = "prefix+alt+8"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 8"
+description = "focus agent 8"
+
+[[keys.command]]
+key = "prefix+alt+9"
+type = "shell"
+command = "$HOME/.config/herdr/agent-jump.sh 9"
+description = "focus agent 9"
+
+# worktrunk plugin: wt-backed worktree switch/create (prefix+shift+g overrides
+# herdr's built-in "new worktree", which would create ~/.herdr/worktrees paths).
+[[keys.command]]
+key = "prefix+shift+g"
+type = "plugin_action"
+command = "worktrunk.open"
+description = "worktree switch / create from default branch (wt)"
+
+[[keys.command]]
+key = "prefix+shift+c"
+type = "plugin_action"
+command = "worktrunk.open-current"
+description = "worktree switch / create from current branch (wt)"
+
+[[keys.command]]
+key = "prefix+shift+x"
+type = "plugin_action"
+command = "worktrunk.remove"
+description = "worktree remove (wt)"
+
+[[keys.command]]
+key = "prefix+shift+w"
+type = "plugin_action"
+command = "worktrunk.manage"
+description = "worktree manager (wt)"
+
+# ctrl+l is taken by navigation, so restore clear-screen on a prefix chord.
+[[keys.command]]
+key = "prefix+ctrl+l"
+type = "shell"
+command = "\"$HERDR_BIN_PATH\" pane send-keys \"$HERDR_ACTIVE_PANE_ID\" ctrl+l"
+description = "send ctrl+l (clear screen) to pane"
