@@ -26,6 +26,8 @@ XDG_DOTFILES = {
   "herdr/config.toml" => ".config/herdr/config.toml",
   "herdr/navigate.sh" => ".config/herdr/navigate.sh",
   "herdr/agent-jump.sh" => ".config/herdr/agent-jump.sh",
+  "herdr/herdr-navigator.vim" => ".config/nvim/plugin/herdr-navigator.vim",
+  "init.vim" => ".config/nvim/init.vim",
 }
 
 desc %(Make symlinks of dotfiles)
@@ -45,7 +47,8 @@ task :link do
       warn "~/#{target} already exists"
     else
       mkdir_p File.dirname(dotfile)
-      ln_s File.join(DOTFILES_DIR, source), dotfile
+      # Absolute source: a relative one would resolve from inside ~/.config/<app>/.
+      ln_s File.join(ENV['HOME'], DOTFILES_DIR, source), dotfile
     end
   end
 end
